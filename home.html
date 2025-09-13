@@ -743,6 +743,7 @@
       border-radius: 15px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.1);
       border-top: 4px solid #3e9ca8;
+      max-height: 650px; /* Set max height for 12 items */
     }
     
     .news-feed h2 {
@@ -767,6 +768,49 @@
       font-weight: 900;
       color: #3e9ca8;
       font-size: 1.2em;
+    }
+    
+    /* News Container Styles */
+    #news-container {
+      max-height: 550px; /* Allow for scrolling when many items */
+      overflow-y: auto;
+      padding-right: 5px; /* Space for scrollbar */
+    }
+    
+    /* Custom scrollbar for news container */
+    #news-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #news-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    
+    #news-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+      transition: background 0.2s ease;
+    }
+    
+    #news-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    /* News Placeholder Styles */
+    .news-placeholder {
+      text-align: center;
+      padding: 40px 20px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 2px dashed #cbd5e1;
+    }
+    
+    .placeholder-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
     
     .refresh-btn {
@@ -1036,23 +1080,41 @@
       background: #cbd5e1;
     }
     
+    /* News Item Animation */
     .news-item {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       background: #f8fafc;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      border-radius: 10px;
+      padding: 12px 16px; /* Reduced padding for more compact display */
+      margin-bottom: 8px; /* Reduced margin for tighter spacing */
+      border-radius: 8px; /* Slightly smaller border radius */
       border-left: 4px solid #22c55e;
       transition: all 0.3s ease;
       position: relative;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: newsItemFadeIn 0.5s ease-out forwards;
+    }
+    
+    @keyframes newsItemFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     
     .news-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transform: translateY(-1px); /* Reduced hover effect */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Lighter shadow */
       background: #f1f5f9;
+      border-left-color: #16a34a;
+    }
+    
+    .news-item:hover .external-link-badge {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      transform: scale(1.05);
     }
     
     .news-item:last-child {
@@ -1166,6 +1228,54 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    }
+    
+    .news-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      align-items: center;
+    }
+    
+    .external-link-badge {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.7em;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+    }
+    
+    .external-link-badge i {
+      font-size: 0.8em;
+    }
+    
+    .new-badge {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.7em;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+      animation: newBadgePulse 2s ease-in-out infinite;
+    }
+    
+    .new-badge i {
+      font-size: 0.8em;
+    }
+    
+    @keyframes newBadgePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
     }
     
     .news-meta {
@@ -1419,34 +1529,12 @@
           </button>
         </h2>
         <div id="news-container">
-          <div class="news-item" onclick="openNewsDetail('oncology-manufacturing')">
-            <div class="news-content">
-              <a href="#" onclick="event.preventDefault()">This is a new update for Oncology drugs manufacturing units</a>
-              <span class="fda-badge">FDA</span>
-            </div>
-            <div class="news-meta">
-              <span class="news-time">2 hours ago</span>
-              <i class="fa-solid fa-chevron-right news-arrow"></i>
-            </div>
-          </div>
-          <div class="news-item" onclick="openNewsDetail('oncology-manufacturing')">
-            <div class="news-content">
-              <a href="#" onclick="event.preventDefault()">This is a new update for Oncology drugs manufacturing units</a>
-              <span class="fda-badge">FDA</span>
-            </div>
-            <div class="news-meta">
-              <span class="news-time">1 day ago</span>
-              <i class="fa-solid fa-chevron-right news-arrow"></i>
-            </div>
-          </div>
-          <div class="news-item" onclick="openNewsDetail('oncology-manufacturing')">
-            <div class="news-content">
-              <a href="#" onclick="event.preventDefault()">This is a new update for Oncology drugs manufacturing units</a>
-              <span class="fda-badge">FDA</span>
-            </div>
-            <div class="news-meta">
-              <span class="news-time">2 hours ago</span>
-              <i class="fa-solid fa-chevron-right news-arrow"></i>
+          <!-- News items will be populated dynamically -->
+          <div class="news-placeholder">
+            <div class="placeholder-content">
+              <i class="fa-solid fa-newspaper" style="font-size: 2em; color: #cbd5e1; margin-bottom: 10px;"></i>
+              <p style="color: #64748b; margin: 0; font-size: 0.9em;">Loading news feed...</p>
+              <p style="color: #94a3b8; margin: 5px 0 0 0; font-size: 0.8em;">News items will appear here</p>
             </div>
           </div>
         </div>
@@ -1516,122 +1604,200 @@
   </footer>
 
   <script>
-    // News data with detailed information
+    // Real FDA drug safety communications and alerts
     const newsDatabase = {
-      "oncology-manufacturing": {
-        title: "This is a new update for Oncology drugs manufacturing units",
-        date: "2 hours ago",
-        source: "FDA",
-        category: "Manufacturing",
-        summary: "The FDA has issued new guidelines for oncology drug manufacturing facilities to enhance quality control and ensure patient safety across all production stages.",
-        details: `
-          <p>The Food and Drug Administration has released comprehensive updates to manufacturing standards for oncology medications, focusing on:</p>
-          <ul>
-            <li><strong>Enhanced Quality Control:</strong> Implementation of advanced testing protocols at every production stage</li>
-            <li><strong>Contamination Prevention:</strong> Stricter cleanroom requirements and environmental monitoring</li>
-            <li><strong>Supply Chain Integrity:</strong> New tracking requirements for raw materials and active pharmaceutical ingredients</li>
-            <li><strong>Documentation Standards:</strong> Updated record-keeping requirements for batch production</li>
-          </ul>
-          <p>These changes affect all manufacturers of oncology drugs and must be implemented within 180 days of the notice publication. The FDA estimates this will impact over 200 manufacturing facilities nationwide.</p>
-          <p><strong>Key Deadlines:</strong></p>
-          <ul>
-            <li>Initial compliance assessment: 60 days</li>
-            <li>Implementation plan submission: 120 days</li>
-            <li>Full compliance: 180 days</li>
-          </ul>
-        `,
-        lastUpdated: "September 10, 2025 2:30 PM"
-      },
-      "cardiovascular-safety": {
-        title: "New FDA guidance on Oncology drug development protocols",
-        date: "Just now",
-        source: "FDA",
-        category: "Drug Development",
-        summary: "FDA introduces updated protocols for oncology drug development focusing on accelerated approval pathways and real-world evidence requirements.",
-        details: `
-          <p>The FDA has announced significant updates to oncology drug development protocols, introducing new pathways for faster patient access to breakthrough therapies:</p>
-          <ul>
-            <li><strong>Accelerated Approval Enhancements:</strong> Streamlined processes for drugs treating unmet medical needs</li>
-            <li><strong>Real-World Evidence Integration:</strong> New requirements for post-market surveillance and data collection</li>
-            <li><strong>Biomarker Validation:</strong> Updated standards for companion diagnostics and personalized medicine approaches</li>
-            <li><strong>Clinical Trial Design:</strong> Flexible trial designs including adaptive and umbrella studies</li>
-          </ul>
-          <p>These protocols aim to reduce development timelines by an average of 18 months while maintaining rigorous safety standards.</p>
-          <p><strong>Implementation Timeline:</strong></p>
-          <ul>
-            <li>New submissions: Effective immediately</li>
-            <li>Ongoing trials: Transition period of 6 months</li>
-            <li>Training programs: Available starting October 2025</li>
-          </ul>
-        `,
-        lastUpdated: "September 10, 2025 4:45 PM"
-      },
-      "biologics-standards": {
-        title: "Updated safety requirements for cardiovascular medications",
-        date: "15 minutes ago",
+      "leqembi-mri-monitoring": {
+        title: "FDA to recommend additional, earlier MRI monitoring for patients with Alzheimer's disease taking Leqembi (lecanemab)",
+        date: "08/28/2025",
+        dateObject: new Date("2025-08-28"),
         source: "FDA",
         category: "Drug Safety",
-        summary: "Enhanced safety monitoring requirements for cardiovascular medications including new adverse event reporting protocols and post-market surveillance measures.",
-        details: `
-          <p>The FDA has implemented comprehensive safety updates for cardiovascular medications following recent safety signal analysis:</p>
-          <ul>
-            <li><strong>Enhanced Monitoring:</strong> Mandatory reporting of specific cardiovascular events within 15 days</li>
-            <li><strong>Risk Evaluation Programs:</strong> New REMS requirements for high-risk cardiovascular drugs</li>
-            <li><strong>Patient Registries:</strong> Establishment of national cardiovascular drug safety database</li>
-            <li><strong>Healthcare Provider Training:</strong> Mandatory educational programs on cardiovascular drug safety</li>
-          </ul>
-          <p>These measures apply to all cardiovascular medications approved after 2020 and selected legacy drugs with updated risk profiles.</p>
-          <p><strong>Compliance Requirements:</strong></p>
-          <ul>
-            <li>Immediate reporting protocol: Effective October 1, 2025</li>
-            <li>REMS program enrollment: December 1, 2025</li>
-            <li>Healthcare provider certification: January 15, 2026</li>
-          </ul>
-        `,
-        lastUpdated: "September 10, 2025 4:30 PM"
+        summary: "FDA recommends enhanced MRI monitoring protocols for Alzheimer's patients receiving Leqembi treatment to ensure patient safety.",
+        url: "https://www.fda.gov/drugs/drug-safety-and-availability/fda-recommend-additional-earlier-mri-monitoring-patients-alzheimers-disease-taking-leqembi-lecanemab",
+        lastUpdated: "August 28, 2025"
       },
-      "labeling-requirements": {
-        title: "FDA approves new manufacturing standards for biologics",
-        date: "1 hour ago",
+      "green-lumber-recall": {
+        title: "Green Lumber Holding, LLC Issues Consumer Alert on Counterfeit Products Following FDA Findings",
+        date: "08/29/2025",
+        dateObject: new Date("2025-08-29"),
         source: "FDA",
-        category: "Biologics",
-        summary: "Revolutionary manufacturing standards for biologics production focusing on advanced analytics, process validation, and quality assurance protocols.",
-        details: `
-          <p>The FDA has approved groundbreaking manufacturing standards for biologics that leverage cutting-edge technology and data analytics:</p>
-          <ul>
-            <li><strong>Process Analytical Technology:</strong> Real-time monitoring and control of critical quality attributes</li>
-            <li><strong>Continuous Manufacturing:</strong> Approval framework for continuous biologics production processes</li>
-            <li><strong>Advanced Analytics:</strong> Machine learning applications for quality prediction and process optimization</li>
-            <li><strong>Facility Design Standards:</strong> Modular and flexible facility requirements for next-generation biologics</li>
-          </ul>
-          <p>These standards represent a paradigm shift towards Industry 4.0 principles in biologics manufacturing, potentially reducing production costs by 30-40%.</p>
-          <p><strong>Implementation Phases:</strong></p>
-          <ul>
-            <li>Phase 1 - New facilities: January 2026</li>
-            <li>Phase 2 - Existing facility upgrades: January 2027</li>
-            <li>Phase 3 - Full compliance: January 2028</li>
-          </ul>
-        `,
-        lastUpdated: "September 10, 2025 3:45 PM"
+        category: "Drug Recall",
+        summary: "Consumer alert issued for counterfeit products containing undeclared prescription drug Tadalafil in dietary supplements.",
+        url: "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/green-lumber-holding-llc-issues-consumer-alert-counterfeit-products-following-fda-findings",
+        lastUpdated: "August 29, 2025"
+      },
+      "dermarite-recall": {
+        title: "DermaRite Industries Expands Voluntary Nationwide Recall Due to Potential Burkholderia cepacia Contamination",
+        date: "08/28/2025",
+        dateObject: new Date("2025-08-28"),
+        source: "FDA",
+        category: "Drug Recall",
+        summary: "Expanded recall of hand sanitizers, cleansers, and skin protectants due to potential bacterial contamination risks.",
+        url: "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/dermarite-industries-expands-voluntary-nationwide-recall-due-potential-burkholderia-cepacia",
+        lastUpdated: "August 28, 2025"
+      },
+      "clozapine-rems-removal": {
+        title: "FDA removes risk evaluation and mitigation strategy (REMS) program for the antipsychotic drug Clozapine",
+        date: "08/27/2025",
+        dateObject: new Date("2025-08-27"),
+        source: "FDA",
+        category: "Drug Safety",
+        summary: "FDA has removed the REMS program for Clozapine, an antipsychotic medication, following safety review updates.",
+        url: "https://www.fda.gov/drugs/drug-safety-and-availability/fda-removes-risk-evaluation-and-mitigation-strategy-rems-program-antipsychotic-drug-clozapine",
+        lastUpdated: "August 27, 2025"
+      },
+      "unichem-recall": {
+        title: "Unichem Pharmaceuticals Issues Voluntary Nationwide Recall of Cyclobenzaprine Hydrochloride Tablets USP 10 mg Due to Mislabeling",
+        date: "08/27/2025",
+        dateObject: new Date("2025-08-27"),
+        source: "FDA",
+        category: "Drug Recall",
+        summary: "Voluntary recall of muscle relaxant medication due to mislabeling issues that could affect patient safety.",
+        url: "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/unichem-pharmaceuticals-usa-inc-issues-voluntary-nationwide-recall-cyclobenzaprine-hydrochloride",
+        lastUpdated: "August 27, 2025"
+      },
+      "opioid-labeling-update": {
+        title: "FDA is requiring opioid pain medicine manufacturers to update prescribing information regarding long-term use",
+        date: "07/31/2025",
+        dateObject: new Date("2025-07-31"),
+        source: "FDA",
+        category: "Drug Safety",
+        summary: "New labeling requirements for opioid medications to provide clearer guidance on long-term use and associated risks.",
+        url: "https://www.fda.gov/drugs/drug-safety-and-availability/fda-requiring-opioid-pain-medicine-manufacturers-update-prescribing-information-regarding-long-term",
+        lastUpdated: "July 31, 2025"
+      },
+      "nostrum-recall": {
+        title: "Nostrum Laboratories Issues Voluntary Nationwide Recall of Sucralfate Tablets USP 1 Gram",
+        date: "07/14/2025",
+        dateObject: new Date("2025-07-14"),
+        source: "FDA",
+        category: "Drug Recall",
+        summary: "Recall of gastrointestinal medication due to company closure and discontinuation of quality activities.",
+        url: "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/nostrum-laboratories-inc-issues-voluntary-nationwide-recall-sucralfate-tablets-usp-1-gram-within",
+        lastUpdated: "July 14, 2025"
+      },
+      "adhd-stimulants-warning": {
+        title: "FDA requires expanded labeling about weight loss risk in patients younger than 6 years taking extended-release stimulants for ADHD",
+        date: "06/30/2025",
+        dateObject: new Date("2025-06-30"),
+        source: "FDA",
+        category: "Drug Safety",
+        summary: "Enhanced labeling requirements for ADHD medications regarding weight loss risks in young children.",
+        url: "https://www.fda.gov/drugs/drug-safety-and-availability/fda-requires-expanded-labeling-about-weight-loss-risk-patients-younger-6-years-taking-extended",
+        lastUpdated: "June 30, 2025"
+      },
+      "sandoz-cefazolin-recall": {
+        title: "Sandoz Issues Voluntary Nationwide Recall of Cefazolin Injection Due to Product Mispackaging",
+        date: "06/27/2025",
+        dateObject: new Date("2025-06-27"),
+        source: "FDA",
+        category: "Drug Recall",
+        summary: "Antibiotic injection recall due to potential presence of incorrect medication in packaging.",
+        url: "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/sandoz-inc-issues-voluntary-nationwide-recall-one-lot-cefazolin-injection-due-product-mispackaging",
+        lastUpdated: "June 27, 2025"
+      },
+      "transderm-scop-warning": {
+        title: "FDA adds warning about serious risk of heat-related complications with antinausea patch Transderm Scōp (scopolamine)",
+        date: "06/18/2025",
+        dateObject: new Date("2025-06-18"),
+        source: "FDA",
+        category: "Drug Safety",
+        summary: "New warnings added for motion sickness patch regarding heat-related complications and safety concerns.",
+        url: "https://www.fda.gov/drugs/drug-safety-and-availability/fda-adds-warning-about-serious-risk-heat-related-complications-antinausea-patch-transderm-scop",
+        lastUpdated: "June 18, 2025"
       }
     };
 
-    const currentNewsItems = [
-      "oncology-manufacturing",
-      "oncology-manufacturing", 
-      "oncology-manufacturing"
-    ];
+    // Function to get news items sorted by date (latest first)
+    function getSortedNewsItems() {
+      const newsIds = Object.keys(newsDatabase);
+      return newsIds.sort((a, b) => {
+        const dateA = newsDatabase[a].dateObject;
+        const dateB = newsDatabase[b].dateObject;
+        return dateB - dateA; // Sort in descending order (latest first)
+      });
+    }
+
+    // Function to check if news item is recent (within last 7 days)
+    function isRecentNews(dateObject) {
+      const now = new Date();
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return dateObject > weekAgo;
+    }
+
+    // Function to get relative time display
+    function getRelativeTime(dateObject) {
+      const now = new Date();
+      const diffTime = Math.abs(now - dateObject);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+      const diffMinutes = Math.floor(diffTime / (1000 * 60));
+
+      if (diffMinutes < 60) {
+        return diffMinutes <= 1 ? 'Just now' : `${diffMinutes} minutes ago`;
+      } else if (diffHours < 24) {
+        return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
+      } else if (diffDays === 1) {
+        return '1 day ago';
+      } else if (diffDays < 7) {
+        return `${diffDays} days ago`;
+      } else if (diffDays < 30) {
+        const weeks = Math.floor(diffDays / 7);
+        return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+      } else {
+        const months = Math.floor(diffDays / 30);
+        return months === 1 ? '1 month ago' : `${months} months ago`;
+      }
+    }
+
+    // Function to add new news item (automatically manages list size)
+    function addNewNewsItem(newsId, newsData) {
+      // Add the new item to the database
+      newsDatabase[newsId] = {
+        ...newsData,
+        dateObject: new Date(newsData.date || new Date())
+      };
+
+      // Get current sorted items
+      const sortedItems = getSortedNewsItems();
+      
+      // If we have more than 10 items, remove the oldest ones
+      if (sortedItems.length > 10) {
+        const itemsToRemove = sortedItems.slice(10); // Get items beyond the first 10
+        itemsToRemove.forEach(itemId => {
+          delete newsDatabase[itemId];
+        });
+        
+        console.log(`🗑️ Removed ${itemsToRemove.length} oldest news items to maintain list of 10`);
+      }
+
+      // Re-render the news items
+      renderNewsItems();
+      
+      console.log(`✅ Added new news item: ${newsData.title}`);
+      console.log(`📊 Current news count: ${Object.keys(newsDatabase).length}`);
+    }
+
+    // Current news items to display (will be populated dynamically sorted by date)
+    const currentNewsItems = getSortedNewsItems();
 
     function openNewsDetail(newsId) {
       const newsData = newsDatabase[newsId];
       if (!newsData) return;
 
+      // If the news item has a direct URL, open it in a new tab
+      if (newsData.url) {
+        window.open(newsData.url, '_blank');
+        return;
+      }
+
+      // Otherwise, show in modal (for future internal news items)
       document.getElementById('modalTitle').textContent = newsData.title;
       document.getElementById('modalDate').textContent = newsData.date;
       document.getElementById('modalSource').textContent = newsData.source;
       document.getElementById('modalCategory').textContent = newsData.category;
       document.getElementById('modalSummary').textContent = newsData.summary;
-      document.getElementById('modalDetails').innerHTML = newsData.details;
+      document.getElementById('modalDetails').innerHTML = newsData.details || '<p>Click the link above to read the full FDA communication.</p>';
       document.getElementById('modalLastUpdated').textContent = newsData.lastUpdated;
 
       document.getElementById('newsModal').style.display = 'block';
@@ -1673,50 +1839,27 @@
       
       // Simulate API call delay
       setTimeout(() => {
-        // Updated news data with different items
-        const newsUpdates = [
-          {
-            id: "cardiovascular-safety",
-            title: "New FDA guidance on Oncology drug development protocols",
-            time: "Just now"
-          },
-          {
-            id: "biologics-standards", 
-            title: "Updated safety requirements for cardiovascular medications",
-            time: "15 minutes ago"
-          },
-          {
-            id: "labeling-requirements",
-            title: "FDA approves new manufacturing standards for biologics",
-            time: "1 hour ago"
-          },
-          {
-            id: "oncology-manufacturing",
-            title: "Recent changes in drug labeling requirements",
-            time: "3 hours ago"
-          }
-        ];
-        
-        // Clear existing news
-        newsContainer.innerHTML = '';
-        
-        // Add new news items
-        newsUpdates.forEach(news => {
-          const newsItem = document.createElement('div');
-          newsItem.className = 'news-item';
-          newsItem.onclick = () => openNewsDetail(news.id);
-          newsItem.innerHTML = `
-            <div class="news-content">
-              <a href="#" onclick="event.preventDefault()">${news.title}</a>
-              <span class="fda-badge">FDA</span>
-            </div>
-            <div class="news-meta">
-              <span class="news-time">${news.time}</span>
-              <i class="fa-solid fa-chevron-right news-arrow"></i>
+        // Check if we have news data to display
+        if (Object.keys(newsDatabase).length === 0) {
+          // Show placeholder if no data available
+          newsContainer.innerHTML = `
+            <div class="news-placeholder">
+              <div class="placeholder-content">
+                <i class="fa-solid fa-newspaper" style="font-size: 2em; color: #cbd5e1; margin-bottom: 10px;"></i>
+                <p style="color: #64748b; margin: 0; font-size: 0.9em;">No news data available</p>
+                <p style="color: #94a3b8; margin: 5px 0 0 0; font-size: 0.8em;">Please add news data to display items</p>
+              </div>
             </div>
           `;
-          newsContainer.appendChild(newsItem);
-        });
+        } else {
+          // Re-render with current sorted data
+          renderNewsItems();
+          
+          // Optional: Simulate adding a new item for demonstration
+          // This would typically come from an API call
+          console.log('📰 News refreshed - displaying latest items first');
+          console.log(`📊 Total news items: ${Object.keys(newsDatabase).length}`);
+        }
         
         // Remove refreshing animation
         refreshBtn.classList.remove('refreshing');
@@ -1732,15 +1875,104 @@
       }, 1500); // 1.5 second delay to simulate API call
     }
 
-    // Make initial news items clickable
-    document.addEventListener('DOMContentLoaded', function() {
-      const newsLinks = document.querySelectorAll('#news-container .news-content a');
-      newsLinks.forEach((link, index) => {
-        link.onclick = function(e) {
-          e.preventDefault();
-          openNewsDetail(currentNewsItems[index]);
-        };
+    // Example function to simulate adding a new news item (for testing)
+    function simulateNewNewsItem() {
+      const newItemId = `test-item-${Date.now()}`;
+      const newItem = {
+        title: `New FDA Alert - Test Item ${new Date().toLocaleString()}`,
+        date: new Date().toLocaleDateString('en-US', {
+          month: '2-digit',
+          day: '2-digit', 
+          year: 'numeric'
+        }),
+        source: "FDA",
+        category: "Drug Safety",
+        summary: "This is a test news item to demonstrate the automatic sorting and management functionality.",
+        url: "https://www.fda.gov",
+        lastUpdated: new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+      };
+      
+      addNewNewsItem(newItemId, newItem);
+    }
+
+    // Function to render news items (can be called to initially populate)
+    function renderNewsItems() {
+      const newsContainer = document.getElementById('news-container');
+      
+      if (Object.keys(newsDatabase).length === 0) {
+        // Show placeholder if no data
+        newsContainer.innerHTML = `
+          <div class="news-placeholder">
+            <div class="placeholder-content">
+              <i class="fa-solid fa-newspaper" style="font-size: 2em; color: #cbd5e1; margin-bottom: 10px;"></i>
+              <p style="color: #64748b; margin: 0; font-size: 0.9em;">Loading news feed...</p>
+              <p style="color: #94a3b8; margin: 5px 0 0 0; font-size: 0.8em;">News items will appear here</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+      
+      // Clear existing content
+      newsContainer.innerHTML = '';
+      
+      // Get sorted news items (latest first) and limit to 10
+      const sortedNewsIds = getSortedNewsItems().slice(0, 10);
+      
+      // Render each news item
+      sortedNewsIds.forEach((newsId, index) => {
+        const newsData = newsDatabase[newsId];
+        if (newsData) {
+          const newsItem = document.createElement('div');
+          newsItem.className = 'news-item';
+          newsItem.onclick = () => openNewsDetail(newsId);
+          newsItem.style.animationDelay = `${index * 0.1}s`; // Stagger animation
+          
+          // Add "NEW" badge for items from the last 7 days
+          const isRecent = isRecentNews(newsData.dateObject);
+          
+          newsItem.innerHTML = `
+            <div class="news-content">
+              <a href="#" onclick="event.preventDefault()">${newsData.title}</a>
+              <div class="news-badges">
+                <span class="fda-badge">${newsData.source || 'FDA'}</span>
+                ${newsData.url ? '<span class="external-link-badge"><i class="fa-solid fa-external-link-alt"></i> External Link</span>' : ''}
+                ${isRecent ? '<span class="new-badge"><i class="fa-solid fa-star"></i> Recent</span>' : ''}
+              </div>
+            </div>
+            <div class="news-meta">
+              <span class="news-time">${getRelativeTime(newsData.dateObject)}</span>
+              <i class="fa-solid fa-chevron-right news-arrow"></i>
+            </div>
+          `;
+          newsContainer.appendChild(newsItem);
+        }
       });
+    }
+
+    // Initialize page when DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render initial news items (sorted by date)
+      renderNewsItems();
+      
+      // Make test function available globally for testing
+      window.simulateNewNewsItem = simulateNewNewsItem;
+      window.addNewNewsItem = addNewNewsItem;
+      
+      // Log current news order for verification
+      console.log('📰 News Feed Initialized');
+      console.log('📅 News items ordered by date (latest first):');
+      getSortedNewsItems().forEach((id, index) => {
+        const item = newsDatabase[id];
+        console.log(`${index + 1}. ${item.date} - ${item.title.substring(0, 50)}...`);
+      });
+      console.log('\n🔧 Test commands available:');
+      console.log('- simulateNewNewsItem() - Add a test news item');
+      console.log('- addNewNewsItem(id, data) - Add a custom news item');
     });
 
     // Close modal with Escape key
