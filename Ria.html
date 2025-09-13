@@ -2452,8 +2452,9 @@
                   <th>Brand</th>
                   <th>Dosage</th>
                   <th>Market</th>
+                  <th>Document ID</th>
                   <th>Document Name</th>
-                  <th>Submission Milestone</th>
+                  <th>Submission ID</th>
                   <th>Analysis Impact</th>
                 </tr>
               </thead>
@@ -2464,8 +2465,9 @@
                   <td id="brand1"></td>
                   <td id="dosage1"></td>
                   <td id="market1"></td>
+                  <td id="documentId1"></td>
                   <td id="documentName1"></td>
-                  <td id="submissionMilestone1"></td>
+                  <td id="submissionId1"></td>
                   <td>
                     <button class="analyse-btn disabled" onclick="analyzeImpact(1)" disabled>Analyse</button>
                   </td>
@@ -2476,8 +2478,9 @@
                   <td id="brand2"></td>
                   <td id="dosage2"></td>
                   <td id="market2"></td>
+                  <td id="documentId2"></td>
                   <td id="documentName2"></td>
-                  <td id="submissionMilestone2"></td>
+                  <td id="submissionId2"></td>
                   <td>
                     <button class="analyse-btn disabled" onclick="analyzeImpact(2)" disabled>Analyse</button>
                   </td>
@@ -2488,8 +2491,9 @@
                   <td id="brand3"></td>
                   <td id="dosage3"></td>
                   <td id="market3"></td>
+                  <td id="documentId3"></td>
                   <td id="documentName3"></td>
-                  <td id="submissionMilestone3"></td>
+                  <td id="submissionId3"></td>
                   <td>
                     <button class="analyse-btn disabled" onclick="analyzeImpact(3)" disabled>Analyse</button>
                   </td>
@@ -2852,8 +2856,9 @@ TIMELINE: 97 days remaining`;
           brand: "OncoCure Plus",
           dosage: "250mg Tablets",
           market: "US/EU",
+          documentId: "DOC-2025-001",
           documentName: "Clinical Study Protocol v2.1",
-          submissionMilestone: "Phase III Completion - Q2 2026"
+          submissionId: "SUB-PHI-2026-Q2"
         },
         {
           newsFeed: "Manufacturing Standards Update",
@@ -2861,8 +2866,9 @@ TIMELINE: 97 days remaining`;
           brand: "ImmunoFlex Pro",
           dosage: "5mg/ml Injectable",
           market: "Global",
+          documentId: "DOC-2025-002",
           documentName: "Manufacturing Process Manual v3.0",
-          submissionMilestone: "BLA Submission - Q4 2025"
+          submissionId: "SUB-BLA-2025-Q4"
         },
         {
           newsFeed: "Quality Control Requirements",
@@ -2870,8 +2876,9 @@ TIMELINE: 97 days remaining`;
           brand: "CardioShield Advanced",
           dosage: "50mg/100mg Capsules",
           market: "US/Canada",
+          documentId: "DOC-2025-003",
           documentName: "Quality Control SOP v1.5",
-          submissionMilestone: "NDA Amendment - Q1 2026"
+          submissionId: "SUB-NDA-2026-Q1"
         }
       ];
 
@@ -2883,8 +2890,9 @@ TIMELINE: 97 days remaining`;
         document.getElementById(`brand${rowNum}`).textContent = data.brand;
         document.getElementById(`dosage${rowNum}`).textContent = data.dosage;
         document.getElementById(`market${rowNum}`).textContent = data.market;
+        document.getElementById(`documentId${rowNum}`).textContent = data.documentId;
         document.getElementById(`documentName${rowNum}`).textContent = data.documentName;
-        document.getElementById(`submissionMilestone${rowNum}`).textContent = data.submissionMilestone;
+        document.getElementById(`submissionId${rowNum}`).textContent = data.submissionId;
       });
 
       // Enable all Analyse buttons

@@ -497,7 +497,94 @@
     .table-controls {
       display: flex;
       align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    /* Search Container Styles */
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .global-search-input {
+      width: 100%;
+      padding: 12px 45px 12px 40px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .global-search-input:focus {
+      border-color: #3e9ca8;
+      box-shadow: 0 0 0 3px rgba(62, 156, 168, 0.1);
+      background: #fefefe;
+    }
+
+    .global-search-input::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: #64748b;
+      font-size: 16px;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    .global-search-input:focus + .search-icon {
+      color: #3e9ca8;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 8px;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clear-search-btn:hover {
+      background: #f1f5f9;
+      color: #ef4444;
+    }
+
+    .search-stats {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+      margin-left: 2px;
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
       gap: 10px;
+    }
     }
 
     .btn-export {
@@ -1258,8 +1345,20 @@
         <div class="table-header">
           <h2><i class="fas fa-table"></i> Pharmaceutical Regulatory Document & Submission Management</h2>
           <div class="table-controls">
-            <button class="btn-export" id="exportBtn"><i class="fas fa-download"></i> Export</button>
-            <button class="btn-clear-filters" id="clearFiltersBtn" style="display: none;"><i class="fas fa-times"></i> Clear Filters</button>
+            <div class="search-container">
+              <div class="search-input-wrapper">
+                <input type="text" id="globalSearchInput" placeholder="Search across all columns..." class="global-search-input">
+                <i class="fas fa-search search-icon"></i>
+                <button class="clear-search-btn" id="clearSearchBtn" style="display: none;">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div class="search-stats" id="searchStats"></div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn-export" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+              <button class="btn-clear-filters" id="clearFiltersBtn" style="display: none;"><i class="fas fa-times"></i> Clear Filters</button>
+            </div>
           </div>
         </div>
         
@@ -1439,6 +1538,7 @@
     let allData = [];
     let filteredData = [];
     let currentFilters = {};
+    let globalSearchTerm = '';
     let currentPage = 1;
     const rowsPerPage = 10;
 
@@ -1653,6 +1753,7 @@
       if (!allData || allData.length === 0) {
         filteredData = [];
         renderTable();
+        updateSearchStats(0, 0);
         return;
       }
       
@@ -1698,6 +1799,17 @@
       }
       
       filteredData = allData.filter(row => {
+        // Apply global search filter first
+        if (globalSearchTerm && globalSearchTerm.trim()) {
+          const searchLower = globalSearchTerm.toLowerCase().trim();
+          const matchesSearch = Object.values(row).some(value => {
+            if (value === null || value === undefined) return false;
+            return String(value).toLowerCase().includes(searchLower);
+          });
+          if (!matchesSearch) return false;
+        }
+        
+        // Apply column filters
         return Object.keys(currentFilters).every(columnIndex => {
           const filterValue = currentFilters[columnIndex];
           if (!filterValue) return true; // No filter applied
@@ -1710,6 +1822,9 @@
       });
       
       console.log(`Applied filters: ${filteredData.length} rows from ${allData.length} total`);
+      
+      // Update search statistics
+      updateSearchStats(filteredData.length, allData.length);
       
       // Reset to first page when filters change
       currentPage = 1;
@@ -1991,6 +2106,71 @@
         });
       }
     }
+
+    // Function to setup global search functionality
+    function setupSearchFunctionality() {
+      const searchInput = document.getElementById('globalSearchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      
+      if (searchInput) {
+        // Real-time search with debounce
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            globalSearchTerm = this.value;
+            
+            // Show/hide clear button
+            if (clearSearchBtn) {
+              clearSearchBtn.style.display = globalSearchTerm.trim() ? 'block' : 'none';
+            }
+            
+            applyFilters();
+          }, 300); // 300ms debounce
+        });
+        
+        // Handle Enter key
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            globalSearchTerm = this.value;
+            if (clearSearchBtn) {
+              clearSearchBtn.style.display = globalSearchTerm.trim() ? 'block' : 'none';
+            }
+            applyFilters();
+          }
+        });
+      }
+      
+      // Clear search button
+      if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+          globalSearchTerm = '';
+          if (searchInput) {
+            searchInput.value = '';
+          }
+          this.style.display = 'none';
+          applyFilters();
+        });
+      }
+    }
+
+    // Function to update search statistics
+    function updateSearchStats(filteredCount, totalCount) {
+      const searchStats = document.getElementById('searchStats');
+      if (searchStats) {
+        if (globalSearchTerm && globalSearchTerm.trim()) {
+          searchStats.textContent = `Found ${filteredCount} of ${totalCount} records matching "${globalSearchTerm}"`;
+          searchStats.style.display = 'block';
+        } else if (Object.keys(currentFilters).length > 0) {
+          searchStats.textContent = `Filtered ${filteredCount} of ${totalCount} records`;
+          searchStats.style.display = 'block';
+        } else {
+          searchStats.textContent = '';
+          searchStats.style.display = 'none';
+        }
+      }
+    }
     
     // Function to setup pagination listeners
     function setupPaginationListeners() {
@@ -2158,6 +2338,9 @@
         
         // Setup filter event listeners
         setupFilterListeners();
+        
+        // Setup global search functionality
+        setupSearchFunctionality();
         
         // Setup export button
         const exportBtn = document.getElementById('exportBtn');
