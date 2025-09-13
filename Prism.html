@@ -1566,11 +1566,71 @@
 
     // Function to populate filter dropdowns
     function populateFilters() {
+      if (!allData || allData.length === 0) {
+        console.log('No data available for filters');
+        return;
+      }
+      
       const filterSelects = document.querySelectorAll('.column-filter');
+      
+      // Get actual column names from the data
+      const actualColumns = Object.keys(allData[0]);
+      console.log('Actual CSV columns:', actualColumns);
+      
+      // Column mapping for CSV data - expected column names
+      const expectedColumns = [
+        'Therapeutic Area',      // 0
+        'Drug',                  // 1  
+        'Dosage',               // 2
+        'Market',               // 3
+        'Document Name',        // 4
+        'Document ID',          // 5
+        'Approved Version',     // 6
+        'Document Status',      // 7
+        'Document Owner',       // 8
+        'Submission ID',        // 9
+        'Submission Workflow Step',        // 10
+        'Submission Workflow Step Status', // 11
+        'Submission Milestone',            // 12
+        'Submission Milestone Status'      // 13
+      ];
       
       filterSelects.forEach((select, index) => {
         const columnIndex = parseInt(select.dataset.column);
-        const uniqueValues = [...new Set(allData.map(row => row[columnIndex]))].sort();
+        const expectedColumnName = expectedColumns[columnIndex];
+        
+        // Try to find the actual column name - exact match first, then fuzzy match
+        let actualColumnName = actualColumns[columnIndex]; // fallback to index
+        
+        // Exact match
+        if (actualColumns.includes(expectedColumnName)) {
+          actualColumnName = expectedColumnName;
+        } else {
+          // Fuzzy match - look for similar column names
+          const normalizeString = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+          const expectedNormalized = normalizeString(expectedColumnName);
+          
+          const fuzzyMatch = actualColumns.find(col => 
+            normalizeString(col) === expectedNormalized
+          );
+          
+          if (fuzzyMatch) {
+            actualColumnName = fuzzyMatch;
+          }
+        }
+        
+        console.log(`Filter ${columnIndex}: Expected '${expectedColumnName}', Using '${actualColumnName}'`);
+        
+        // Get unique values for this column
+        const uniqueValues = [...new Set(allData.map(row => {
+          const value = row[actualColumnName] || '';
+          return typeof value === 'string' ? value.trim() : String(value || '').trim();
+        }).filter(val => val !== ''))].sort();
+        
+        console.log(`Column '${actualColumnName}' has ${uniqueValues.length} unique values`);
+        if (uniqueValues.length > 0) {
+          console.log('Sample values:', uniqueValues.slice(0, 3));
+        }
         
         // Clear existing options except "All"
         select.innerHTML = '<option value="">All</option>';
@@ -1590,13 +1650,66 @@
 
     // Function to apply filters
     function applyFilters() {
+      if (!allData || allData.length === 0) {
+        filteredData = [];
+        renderTable();
+        return;
+      }
+      
+      // Get actual column names from the data
+      const actualColumns = Object.keys(allData[0]);
+      
+      // Expected column mapping for CSV data
+      const expectedColumns = [
+        'Therapeutic Area',      // 0
+        'Drug',                  // 1  
+        'Dosage',               // 2
+        'Market',               // 3
+        'Document Name',        // 4
+        'Document ID',          // 5
+        'Approved Version',     // 6
+        'Document Status',      // 7
+        'Document Owner',       // 8
+        'Submission ID',        // 9
+        'Submission Workflow Step',        // 10
+        'Submission Workflow Step Status', // 11
+        'Submission Milestone',            // 12
+        'Submission Milestone Status'      // 13
+      ];
+      
+      // Helper function to find the correct column name
+      function getActualColumnName(columnIndex) {
+        const expectedColumnName = expectedColumns[columnIndex];
+        
+        // Try exact match first
+        if (actualColumns.includes(expectedColumnName)) {
+          return expectedColumnName;
+        }
+        
+        // Try fuzzy match
+        const normalizeString = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const expectedNormalized = normalizeString(expectedColumnName);
+        
+        const fuzzyMatch = actualColumns.find(col => 
+          normalizeString(col) === expectedNormalized
+        );
+        
+        return fuzzyMatch || actualColumns[columnIndex] || expectedColumnName;
+      }
+      
       filteredData = allData.filter(row => {
         return Object.keys(currentFilters).every(columnIndex => {
           const filterValue = currentFilters[columnIndex];
           if (!filterValue) return true; // No filter applied
-          return row[parseInt(columnIndex)] === filterValue;
+          
+          const actualColumnName = getActualColumnName(parseInt(columnIndex));
+          const rowValue = row[actualColumnName] || '';
+          
+          return rowValue.toString().trim() === filterValue;
         });
       });
+      
+      console.log(`Applied filters: ${filteredData.length} rows from ${allData.length} total`);
       
       // Reset to first page when filters change
       currentPage = 1;
@@ -1646,13 +1759,54 @@
         return;
       }
       
+      // Get actual column names from the data
+      const actualColumns = filteredData.length > 0 ? Object.keys(filteredData[0]) : [];
+      
+      // Expected column mapping for CSV data
+      const expectedColumns = [
+        'Therapeutic Area',      // 0
+        'Drug',                  // 1  
+        'Dosage',               // 2
+        'Market',               // 3
+        'Document Name',        // 4
+        'Document ID',          // 5
+        'Approved Version',     // 6
+        'Document Status',      // 7
+        'Document Owner',       // 8
+        'Submission ID',        // 9
+        'Submission Workflow Step',        // 10
+        'Submission Workflow Step Status', // 11
+        'Submission Milestone',            // 12
+        'Submission Milestone Status'      // 13
+      ];
+      
+      // Helper function to find the correct column name
+      function getActualColumnName(columnIndex) {
+        const expectedColumnName = expectedColumns[columnIndex];
+        
+        // Try exact match first
+        if (actualColumns.includes(expectedColumnName)) {
+          return expectedColumnName;
+        }
+        
+        // Try fuzzy match
+        const normalizeString = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const expectedNormalized = normalizeString(expectedColumnName);
+        
+        const fuzzyMatch = actualColumns.find(col => 
+          normalizeString(col) === expectedNormalized
+        );
+        
+        return fuzzyMatch || actualColumns[columnIndex] || expectedColumnName;
+      }
+      
       // Calculate pagination
       const totalPages = Math.ceil(filteredData.length / rowsPerPage);
       const startIndex = (currentPage - 1) * rowsPerPage;
       const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
       const currentPageData = filteredData.slice(startIndex, endIndex);
       
-      // Render current page data with null checks
+      // Render current page data with robust column matching
       currentPageData.forEach(rowData => {
         if (!rowData) {
           console.warn('Invalid row data:', rowData);
@@ -1661,20 +1815,20 @@
         
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${rowData['Therapeutic Area'] || rowData[0] || ''}</td>
-          <td>${rowData['Drug'] || rowData[1] || ''}</td>
-          <td>${rowData['Dosage'] || rowData[2] || ''}</td>
-          <td>${rowData['Market'] || rowData[3] || ''}</td>
-          <td>${rowData['Document Name'] || rowData[4] || ''}</td>
-          <td>${rowData['Document ID'] || rowData[5] || ''}</td>
-          <td>${rowData['Approved Version'] || rowData[6] || ''}</td>
-          <td>${getStatusHTML(rowData['Document Status'] || rowData[7], 'document')}</td>
-          <td>${rowData['Document Owner'] || rowData[8] || ''}</td>
-          <td>${rowData['Submission ID'] || rowData[9] || ''}</td>
-          <td>${rowData['Submission Workflow Step'] || rowData[10] || ''}</td>
-          <td>${getStatusHTML(rowData['Submission Workflow Step Status'] || rowData[11], 'workflow')}</td>
-          <td>${rowData['Submission Milestone'] || rowData[12] || ''}</td>
-          <td>${getStatusHTML(rowData['Submission Milestone Status'] || rowData[13], 'milestone')}</td>
+          <td>${rowData[getActualColumnName(0)] || ''}</td>
+          <td>${rowData[getActualColumnName(1)] || ''}</td>
+          <td>${rowData[getActualColumnName(2)] || ''}</td>
+          <td>${rowData[getActualColumnName(3)] || ''}</td>
+          <td>${rowData[getActualColumnName(4)] || ''}</td>
+          <td>${rowData[getActualColumnName(5)] || ''}</td>
+          <td>${rowData[getActualColumnName(6)] || ''}</td>
+          <td>${getStatusHTML(rowData[getActualColumnName(7)], 'document')}</td>
+          <td>${rowData[getActualColumnName(8)] || ''}</td>
+          <td>${rowData[getActualColumnName(9)] || ''}</td>
+          <td>${rowData[getActualColumnName(10)] || ''}</td>
+          <td>${getStatusHTML(rowData[getActualColumnName(11)], 'workflow')}</td>
+          <td>${rowData[getActualColumnName(12)] || ''}</td>
+          <td>${getStatusHTML(rowData[getActualColumnName(13)], 'milestone')}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -1979,6 +2133,25 @@
         // Store all data globally
         allData = [...s3Data];
         filteredData = [...allData];
+        
+        // Debug: Log first few rows to see data structure
+        console.log('First 3 data rows:', allData.slice(0, 3));
+        console.log('Data keys (first row):', allData[0] ? Object.keys(allData[0]) : 'No data');
+        
+        // Check for specific columns that are reported as blank
+        if (allData.length > 0) {
+          const firstRow = allData[0];
+          console.log('First row values for problem columns:');
+          console.log('- Submission Workflow Step:', firstRow['Submission Workflow Step']);
+          console.log('- Available keys:', Object.keys(firstRow));
+          
+          // Check if any key is similar to "Submission Workflow Step"
+          const similarKeys = Object.keys(firstRow).filter(key => 
+            key.toLowerCase().includes('workflow') || 
+            key.toLowerCase().includes('submission')
+          );
+          console.log('- Keys containing workflow/submission:', similarKeys);
+        }
         
         // Populate filter dropdowns
         populateFilters();
