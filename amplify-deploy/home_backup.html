@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA - Automated Unified Regulatory Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+ 
+    /* Header */
+    .header {
+      background: #3e9ca8;
+      color: white;
+      padding: 20px;
+      border-radius: 0;
+      position: relative;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header img {
+      position: absolute;
+      left: 0; /* Start from the very left edge */
+      top: 50%;
+      transform: translateY(-50%);
+      height: 150px; /* Match Ria.html logo height */
+      width: 110px; /* Match Ria.html sidebar width */
+      object-fit: contain;
+      z-index: 20;
+      background: rgba(255,255,255,0.1); /* Subtle background to define logo area */
+      border-radius: 0;
+      padding: 10px; /* Add some padding inside the logo area */
+      box-sizing: border-box;
+    }
+    .header-content {
+      flex: 1;
+      text-align: center;
+      margin-left: 110px; /* Offset by logo/sidebar width to match Ria.html */
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.2em;
+    }
+    .header p {
+      margin: 5px 0 0 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+ 
+    /* Layout wrapper */
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+      position: relative;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 110px; /* Match Ria.html sidebar width */
+      background: linear-gradient(135deg, #2d3748 0%, #3e9ca8 100%);
+      color: white;
+      padding: 25px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      min-height: calc(100vh - 140px);
+      position: relative;
+      z-index: 10; /* Lower than logo z-index */
+      margin-top: 0; /* Ensure sidebar starts right below header */
+    }    .sidebar a {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 15px 20px;
+      color: white;
+      text-decoration: none;
+      margin: 8px 15px;
+      border-radius: 12px;
+      width: calc(100% - 30px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .sidebar a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .sidebar a:hover::before {
+      left: 100%;
+    }
+
+    .sidebar a:hover {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .sidebar a.active {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .sidebar a i {
+      margin-right: 12px;
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+      background: rgba(255,255,255,0.2);
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar a:hover i {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.1);
+    }
+
+    /* Individual color themes for each sidebar item */
+    .sidebar a[href*="home"]:hover {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .sidebar a[href*="Ria"]:hover {
+      background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+
+    .sidebar a[href*="PRISM"]:hover, .sidebar a:nth-child(3):hover {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+
+    .sidebar a[href*="RISE"]:hover, .sidebar a:nth-child(4):hover {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Sidebar title */
+    .sidebar-title {
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding: 0 20px;
+      text-align: center;
+      opacity: 0.9;
+      border-bottom: 2px solid rgba(255,255,255,0.2);
+      padding-bottom: 15px;
+      width: calc(100% - 40px);
+    }
+ 
+    /* Main Content */
+    .main {
+      flex: 1;
+      background: #f3f4f6;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+ 
+    /* Cards Layout */
+    .cards-container {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+ 
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      flex: 1;
+      min-width: 280px;
+    }
+ 
+    .card h3 {
+      margin-top: 0;
+    }
+ 
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .card ul li {
+      margin: 8px 0;
+    }
+    .card ul li i {
+      margin-right: 8px;
+      color: #2d9ca9;
+    }
+ 
+    .launch-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #22c55e;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .launch-btn:hover {
+      background: #16a34a;
+    }
+ 
+    /* News Feed */
+.news-feed {
+  background: transparent;   /* remove big white box */
+  padding: 0;
+  margin-bottom: 30px;
+}
+ 
+.news-feed h2 {
+  margin: 0 0 15px 0;
+}
+ 
+.news-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+ 
+.news-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+ 
+.news-item a {
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.news-content {
+  flex: 1;
+}
+
+.news-source {
+  color: #22c55e;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+ 
+.news-time {
+  white-space: nowrap;
+  color: #555;
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+ 
+ 
+    /* Footer */
+    footer {
+      background: #3e9ca8;
+      color: white;
+      padding: 5px;
+      text-align: center; /* center everything */
+    }
+    .footer-icons {
+      margin-top: 10px;
+    }
+    .footer-icons a {
+      color: white;
+      margin: 0 10px;
+      font-size: 20px;
+      text-decoration: none;
+    }
+    .footer-icons a:hover {
+      color: #2d9ca9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 90px; /* Reduce sidebar width on tablet */
+      }
+      .header img {
+        width: 90px; /* Match sidebar width exactly */
+        height: 120px; /* Proportionally reduce height */
+        padding: 8px;
+      }
+      .header-content {
+        margin-left: 90px; /* Match sidebar width */
+      }
+      .main-content {
+        margin-left: 90px;
+      }
+      .sidebar a {
+        font-size: 12px;
+        padding: 12px 15px;
+      }
+      .sidebar a i {
+        font-size: 16px;
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 70px; /* Further reduce for mobile */
+      }
+      .header img {
+        width: 70px; /* Match sidebar width exactly */
+        height: 100px; /* Proportionally reduce height */
+        padding: 5px;
+      }
+      .header-content {
+        margin-left: 70px; /* Match sidebar width */
+      }
+      .main-content {
+        margin-left: 70px;
+        padding: 15px;
+      }
+      .sidebar a {
+        font-size: 11px;
+        padding: 10px 8px;
+      }
+      .sidebar a i {
+        font-size: 14px;
+        margin-right: 5px;
+      }
+      .service-grid {
+        grid-template-columns: 1fr; /* Stack vertically on mobile */
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <!-- Logo in top-left -->
+    <img src="footer-logo.png" alt="Logo">
+    <div class="header-content">
+      <h1>Automated Unified Regulatory Assistant</h1>
+      <p>AURA - Turning Regulatory Chaos into Clarity</p>
+    </div>
+  </div>
+ 
+  <!-- Content -->
+  <div class="content-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-title">NAVIGATION</div>
+      <a href="home.html" class="active"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="Ria.html"><i class="fa-solid fa-robot"></i> RIA</a>
+      <a href="Prism.html"><i class="fa-solid fa-database"></i> PRISM</a>
+      <a href="#"><i class="fa-solid fa-bolt"></i> RISE</a>
+    </div>
+ 
+    <!-- Main Content -->
+    <div class="main">
+      <!-- 3 Cards in Row -->
+      <div class="cards-container">
+        <!-- RIA -->
+        <div class="card">
+          <h3>RIA - The Detective</h3>
+          <p>AI-powered monitoring and analysis of regulatory updates, guidelines, and changes across global markets.</p>
+          <ul>
+            <li><i class="fa-solid fa-rss"></i> Updates Feeds</li>
+            <li><i class="fa-solid fa-magnifying-glass"></i> Monitors Sources</li>
+            <li><i class="fa-solid fa-chart-line"></i> Analytics Dashboard</li>
+            <li><i class="fa-solid fa-bell"></i> Alert Setting</li>
+          </ul>
+          <a href="Ria.html" class="launch-btn">Launch RIA</a>
+        </div>
+ 
+        <!-- PRISM -->
+        <div class="card">
+          <h3>PRISM - The Librarian</h3>
+          <p>Comprehensive product portfolio and regulatory information management system.</p>
+          <ul>
+            <li><i class="fa-solid fa-box"></i> Product Portfolio</li>
+            <li><i class="fa-solid fa-code-branch"></i> Variation Tracker</li>
+            <li><i class="fa-solid fa-check-circle"></i> Compliance Dashboard</li>
+            <li><i class="fa-solid fa-folder-open"></i> Document Management</li>
+          </ul>
+          <a href="#" class="launch-btn">Launch PRISM</a>
+        </div>
+ 
+        <!-- RISE -->
+        <div class="card">
+          <h3>RISE - The Guide</h3>
+          <p>Workflow management and timeline tracking for regulatory submissions and milestone management.</p>
+          <ul>
+            <li><i class="fa-solid fa-tasks"></i> Workflow Management</li>
+            <li><i class="fa-solid fa-calendar-alt"></i> Timeline View</li>
+            <li><i class="fa-solid fa-link"></i> Dependencies</li>
+            <li><i class="fa-solid fa-file-alt"></i> Document Links</li>
+          </ul>
+          <a href="#" class="launch-btn">Launch RISE</a>
+        </div>
+      </div>
+ 
+      <!-- News Feed -->
+      <div class="news-feed">
+        <h2>NEWS FEED</h2>
+        <div class="news-item">
+          <div class="news-content">
+            <a href="#">This is a new update for Oncology drugs manufacturing units</a>
+            <div class="news-source">FDA</div>
+          </div>
+          <span class="news-time">2 hours ago</span>
+        </div>
+        <div class="news-item">
+          <div class="news-content">
+            <a href="#">This is a new update for Oncology drugs manufacturing units</a>
+            <div class="news-source">FDA</div>
+          </div>
+          <span class="news-time">1 day ago</span>
+        </div>
+        <div class="news-item">
+          <div class="news-content">
+            <a href="#">This is a new update for Oncology drugs manufacturing units</a>
+            <div class="news-source">FDA</div>
+          </div>
+          <span class="news-time">2 hours ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Footer -->
+  <footer>
+    <p>Contact Us</p>
+    <div class="footer-icons">
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+    </div>
+    <p>&copy; 2025 AURA. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRISM - Regulatory Integration & Submission Engine</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+ 
+    /* Header */
+    .header {
+      background: #3e9ca8;
+      color: white;
+      padding: 20px;
+      border-radius: 0;
+      position: relative;
+      text-align: center;
+    }
+    .header img {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 150px;
+      width: auto;
+      object-fit: contain;
+      left: 0%;
+    }
+    
+    .user-section {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 12px 16px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .user-section:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.02);
+    }
+    
+    .user-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3e9ca8;
+      font-size: 1.2em;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .user-role {
+      font-size: 0.85em;
+      font-weight: 600;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    .user-status {
+      font-size: 0.7em;
+      margin: 2px 0 0 0;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Header Action Buttons */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 12px;
+    }
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .action-btn i {
+      font-size: 0.9em;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 0.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 2px solid #3e9ca8;
+    }
+    
+    .settings-btn:hover i {
+      animation: rotate 0.5s ease-in-out;
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(180deg); }
+    }
+ 
+    /* Layout wrapper */
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+ 
+    /* Sidebar */
+    .sidebar {
+      width: 110px;
+      background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      width: calc(100% - 30px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(5px);
+    }
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(5px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+      font-weight: 700;
+    }
+    .sidebar a i {
+      margin-right: 12px;
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Quick Stats Styles */
+    .quick-stats {
+      width: 100%;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 12px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .stats-header {
+      text-align: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stats-header h4 {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .stats-header i {
+      display: block;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .stat-item {
+      margin-bottom: 8px;
+      padding: 8px 6px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+
+    .stat-change {
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .stat-change.positive {
+      color: #4ade80;
+    }
+
+    .stat-change.negative {
+      color: #f87171;
+    }
+
+    .stat-change i {
+      font-size: 8px;
+    }
+ 
+    /* Main Content */
+    .main {
+      flex: 1;
+      background: #f3f4f6;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* PRISM Header */
+    .prism-header {
+      background: linear-gradient(135deg, #3e9ca8 0%, #2c7a86 50%, #1f5d68 100%);
+      color: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      position: relative;
+      box-shadow: 0 6px 24px rgba(62, 156, 168, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .prism-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .prism-header h1 {
+      margin: 0;
+      font-size: 1.9em;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .prism-header h1::before {
+      content: '\f0e7';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      font-size: 0.75em;
+      background: linear-gradient(135deg, #ffffff 0%, #e2f3f5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+    }
+
+    .prism-header p {
+      margin: 8px 0 0 0;
+      font-size: 0.95em;
+      opacity: 0.92;
+      font-weight: 400;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.2px;
+    }
+
+    /* Section Styling */
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .section h3 {
+      margin: 0 0 15px 0;
+      color: #333;
+      border-bottom: 2px solid #3e9ca8;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Upcoming Deadlines - New Layout */
+    .deadlines-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .deadlines-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .deadline-item {
+      flex: 1;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      background: #f9f9f9;
+    }
+
+    .deadline-title {
+      color: #3e9ca8;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .deadline-code {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .deadline-date {
+      color: #666;
+      font-size: 13px;
+    }
+
+    /* Filters - New Layout */
+    .filters-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .filter-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .filter-group label {
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .filter-group select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      background: white;
+    }
+
+    /* Impact Summary */
+    .impact-summary {
+      background: #e8f5e8;
+      padding: 15px;
+      border-radius: 5px;
+      color: #333;
+      line-height: 1.5;
+      font-size: 14px;
+      border-left: 4px solid #22c55e;
+    }
+
+    /* Workflow Styles */
+    .workflow-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #3e9ca8;
+      padding-bottom: 10px;
+    }
+
+    .submission-info {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .submission-id {
+      background: #3e9ca8;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .submission-details {
+      background: #f97316;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .milestone-section {
+      margin-bottom: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .milestone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f8f9fa;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .milestone-header:hover {
+      background: #e9ecef;
+    }
+
+    .milestone-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .milestone-number {
+      background: #22c55e;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .milestone-title {
+      font-weight: bold;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .milestone-status {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .milestone-status-select {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: white;
+      cursor: pointer;
+    }
+
+    .milestone-status-select:disabled {
+      background: #f5f5f5;
+      color: #999;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .milestone-status-select.status-complete {
+      background: #22c55e;
+      color: white;
+      border-color: #22c55e;
+    }
+
+    .milestone-status-select.status-ongoing {
+      background: #fbbf24;
+      color: white;
+      border-color: #fbbf24;
+    }
+
+    .milestone-status-select.status-yet-to-start {
+      background: #f97316;
+      color: white;
+      border-color: #f97316;
+    }
+
+    .milestone-status-select option[value="complete"] {
+      background: #22c55e;
+      color: white;
+    }
+
+    .milestone-status-select option[value="ongoing"] {
+      background: #fbbf24;
+      color: white;
+    }
+
+    .milestone-status-select option[value="yet-to-start"] {
+      background: #f97316;
+      color: white;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-badge.complete {
+      background: #22c55e;
+      color: white;
+    }
+
+    .status-badge.ongoing {
+      background: #fbbf24;
+      color: white;
+    }
+
+    .status-badge.yet-to-start {
+      background: #f97316;
+      color: white;
+    }
+
+    .toggle-icon {
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 3px;
+      transition: background-color 0.2s;
+    }
+
+    .toggle-icon:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+
+    .milestone-content {
+      padding: 0;
+      background: white;
+      display: block;
+    }
+
+    .milestone-section:not(.expanded) .milestone-content {
+      display: none;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 20px;
+    }
+
+    .task-item:last-child {
+      border-bottom: none;
+    }
+
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 2;
+    }
+
+    .task-icon {
+      color: #666;
+      font-size: 8px;
+    }
+
+    .task-details {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .task-name {
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .task-dates {
+      display: flex;
+      gap: 30px;
+      flex: 1;
+    }
+
+    .date-column {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .date-label {
+      font-weight: bold;
+      color: #333;
+      font-size: 12px;
+    }
+
+    .date-value {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .task-metrics {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .metric-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+    }
+
+    .metric-number {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .metric-item i {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .status-select {
+      padding: 2px 6px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      font-size: 11px;
+      background: white;
+    }
+
+    /* Query Tracker Styles */
+    .query-table-container {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    .query-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .query-table th {
+      background: linear-gradient(135deg, #3e9ca8, #2c7a7e);
+      color: white;
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .query-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+      max-width: 200px;
+    }
+
+    .query-table tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .query-table tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      display: inline-block;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .status-badge.wip {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .dot:hover {
+      background: #999;
+    }
+
+    /* Upcoming Deadlines */
+    .deadlines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .deadline-item {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 15px;
+    }
+
+    .deadline-item h4 {
+      margin: 0 0 10px 0;
+      color: #2563eb;
+      font-size: 0.9em;
+    }
+
+    .deadline-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.85em;
+    }
+
+    .deadline-date {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    /* Filters */
+    .filters-section {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .filters-row {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 150px;
+    }
+
+    .filter-group label {
+      font-size: 0.9em;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .filter-group select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    /* Submissions by Stage */
+    .submissions-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .submissions-table th {
+      background: #f8f9fa;
+      padding: 12px 8px;
+      text-align: left;
+      font-size: 0.85em;
+      border: 1px solid #ddd;
+      font-weight: bold;
+    }
+
+    .submissions-table td {
+      padding: 12px 8px;
+      border: 1px solid #ddd;
+      font-size: 0.85em;
+    }
+
+    .submissions-table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+
+    .stage-indicator {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: bold;
+      color: white;
+    }
+
+    .stage-pending { background: #fbbf24; }
+    .stage-review { background: #3b82f6; }
+    .stage-approval { background: #10b981; }
+    .stage-launch { background: #8b5cf6; }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #22c55e;
+      transition: width 0.3s ease;
+    }
+
+    /* Query Tracker */
+    .query-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .query-item {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 15px;
+    }
+
+    .query-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .query-title {
+      font-weight: bold;
+      font-size: 0.9em;
+      color: #333;
+    }
+
+    .query-status {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: bold;
+      color: white;
+    }
+
+    .status-standard { background: #6b7280; }
+    .status-overdue { background: #ef4444; }
+
+    .query-details {
+      font-size: 0.85em;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    /* Stage Progress */
+    .stage-section {
+      margin: 15px 0;
+    }
+
+    .stage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .stage-name {
+      font-weight: bold;
+      color: #334155;
+    }
+
+    .stage-status {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: bold;
+      color: white;
+    }
+
+    .status-pending { background: #f59e0b; }
+    .status-not-started { background: #6b7280; }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 5px;
+      text-align: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .footer-icons {
+      margin-top: 10px;
+    }
+    .footer-icons a {
+      color: white;
+      margin: 0 10px;
+      font-size: 20px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .footer-icons a:hover {
+      color: #bdc3c7;
+      transform: translateY(-2px);
+    }
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .left-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-content {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <!-- Logo in top-left -->
+    <img src="footer-logo.png" alt="Logo">
+    <h1>Automated Unified Regulatory Assistant</h1>
+    <p>AURA - Turning Regulatory Chaos into Clarity</p>
+    <div class="user-section">
+      <div class="user-avatar">
+        <i class="fas fa-user-shield"></i>
+      </div>
+      <div class="user-info">
+        <div class="user-role">Admin</div>
+        <div class="user-status">
+          <span class="status-dot"></span>
+          System Administrator
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn notification-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <button class="action-btn settings-btn" title="Settings">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Content -->
+  <div class="content-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="home.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="Ria.html"><i class="fa-solid fa-robot"></i> RIA</a>
+      <a href="Rise.html" class="active"><i class="fa-solid fa-bolt"></i> RISE</a>
+      <a href="Prism.html"><i class="fa-solid fa-database"></i> PRISM</a>
+      
+      <!-- Quick Stats KPIs -->
+      <div class="quick-stats">
+        <div class="stats-header">
+          <i class="fas fa-chart-bar"></i>
+          <h4>Quick Stats</h4>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Active Alerts</div>
+          <div class="stat-value">15</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 2
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Products</div>
+          <div class="stat-value">142</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 3
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Compliance</div>
+          <div class="stat-value">98.2%</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 0.3%
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">On-Time</div>
+          <div class="stat-value">94.1%</div>
+          <div class="stat-change negative">
+            <i class="fas fa-arrow-down"></i> 1.2%
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Main Content -->
+    <div class="main">
+      <!-- PRISM Header -->
+      <div class="prism-header">
+        <h1>Regulatory Integration & Submission Engine</h1>
+        <p>RISE - Workflow management and regulatory milestone tracking system</p>
+      </div>
+
+      <!-- Upcoming Deadlines -->
+      <div class="section">
+        <h3><i class="fa-solid fa-calendar-alt"></i> UPCOMING DEADLINES</h3>
+        <div class="deadlines-container">
+          <div class="deadlines-row">
+            <div class="deadline-item">
+              <div class="deadline-title">BLA Review - NeuroRestore</div>
+              <div class="deadline-code">SID000045</div>
+              <div class="deadline-date">Due: 21-Aug-2025</div>
+            </div>
+            <div class="deadline-item">
+              <div class="deadline-title">BLA Review - NeuroRestore</div>
+              <div class="deadline-code">SID000045</div>
+              <div class="deadline-date">Due: 21-Aug-2025</div>
+            </div>
+          </div>
+          <div class="deadlines-row">
+            <div class="deadline-item">
+              <div class="deadline-title">BLA Review - NeuroRestore</div>
+              <div class="deadline-code">SID000045</div>
+              <div class="deadline-date">Due: 21-Aug-2025</div>
+            </div>
+            <div class="deadline-item">
+              <div class="deadline-title">BLA Review - NeuroRestore</div>
+              <div class="deadline-code">SID000045</div>
+              <div class="deadline-date">Due: 21-Aug-2025</div>
+            </div>
+          </div>
+          <div class="deadlines-row">
+            <div class="deadline-item">
+              <div class="deadline-title">BLA Review - NeuroRestore</div>
+              <div class="deadline-code">SID000045</div>
+              <div class="deadline-date">Due: 21-Aug-2025</div>
+            </div>
+            <div class="deadline-item">
+              <div class="deadline-title">BLA Review - NeuroRestore</div>
+              <div class="deadline-code">SID000045</div>
+              <div class="deadline-date">Due: 21-Aug-2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="section">
+        <h3><i class="fa-solid fa-filter"></i> FILTERS</h3>
+        <div class="filters-row">
+          <div class="filter-group">
+            <label>Therapeutic Area</label>
+            <select>
+              <option>Select Therapeutic Area</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Brand</label>
+            <select>
+              <option>Select Brand</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Dosage</label>
+            <select>
+              <option>Select Dosage</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Market</label>
+            <select>
+              <option>Select Market</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact Summary -->
+      <div class="section">
+        <h3>Impact Summary:</h3>
+        <div class="impact-summary">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.
+        </div>
+      </div>
+
+      <!-- Submissions by Stage Workflow -->
+      <div class="section">
+        <div class="workflow-header">
+          <h3><i class="fa-solid fa-sitemap"></i> SUBMISSIONS BY STAGE</h3>
+          <div class="submission-info">
+            <span class="submission-id">Submission ID - SID000045</span>
+            <span class="submission-details">Oncology - Oncosure - 500mg - France</span>
+          </div>
+        </div>
+
+        <!-- Milestone 1: Strategy Planning & Research -->
+        <div class="milestone-section expanded" data-milestone="1">
+          <div class="milestone-header">
+            <div class="milestone-info">
+              <span class="milestone-number">Milestone 1</span>
+              <span class="milestone-title">Strategy Planning & Research</span>
+            </div>
+            <div class="milestone-status">
+              <select class="milestone-status-select status-ongoing" onchange="updateMilestoneStatus(1, this.value)">
+                <option value="ongoing">Ongoing</option>
+                <option value="complete">Complete</option>
+              </select>
+              <i class="fa-solid fa-chevron-up toggle-icon"></i>
+            </div>
+          </div>
+          
+          <div class="milestone-content">
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Pre-Submission Planning</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Wilson Paul</span>
+                    <span class="progress">Progress: &nbsp;</span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">05-08-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">15-08-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Clinical Trials Data</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Wilson Paul</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>In Progress</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">05-08-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">15-08-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Chemistry, Manufacturing, and Controls (CMC)</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Wilson Paul</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">05-08-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">15-08-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 2: Regulatory Strategy & Consultation -->
+        <div class="milestone-section" data-milestone="2">
+          <div class="milestone-header">
+            <div class="milestone-info">
+              <span class="milestone-number">Milestone 2</span>
+              <span class="milestone-title">Regulatory Strategy & Consultation</span>
+            </div>
+            <div class="milestone-status">
+              <select class="milestone-status-select status-yet-to-start" disabled>
+                <option value="yet-to-start">Yet-to-Start</option>
+              </select>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+          </div>
+          
+          <div class="milestone-content">
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Regulatory Affairs Documentation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Sarah Mitchell</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>In Progress</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">16-08-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">30-09-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Regulatory Consultation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: David Chen</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">20-08-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">15-10-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 3: Submission Assembly & Dispatch -->
+        <div class="milestone-section" data-milestone="3">
+          <div class="milestone-header">
+            <div class="milestone-info">
+              <span class="milestone-number">Milestone 3</span>
+              <span class="milestone-title">Dossier Preparation</span>
+            </div>
+            <div class="milestone-status">
+              <select class="milestone-status-select status-yet-to-start" disabled>
+                <option value="yet-to-start">Yet-to-Start</option>
+              </select>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+          </div>
+          
+          <div class="milestone-content">
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Labeling and Packaging Documentation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Robert Kim</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">01-11-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">15-11-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Pharmacovigilance Data</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Emily Zhang</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">10-11-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">25-11-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Dossier Update & Document Preparation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Dr. Amanda Foster</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">20-11-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">30-11-2025</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 4: Submission Assembly -->
+        <div class="milestone-section" data-milestone="4">
+          <div class="milestone-header">
+            <div class="milestone-info">
+              <span class="milestone-number">Milestone 4</span>
+              <span class="milestone-title">Submission Assembly</span>
+            </div>
+            <div class="milestone-status">
+              <select class="milestone-status-select status-yet-to-start" disabled>
+                <option value="yet-to-start">Yet-to-Start</option>
+              </select>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+          </div>
+          
+          <div class="milestone-content">
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Regulatory Submission Compilation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: James Wilson</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">01-12-2025</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">31-01-2026</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Submission Compilation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Dr. Patricia Lee</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">15-01-2026</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">28-02-2026</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 5: Regulatory Interaction -->
+        <div class="milestone-section" data-milestone="5">
+          <div class="milestone-header">
+            <div class="milestone-info">
+              <span class="milestone-number">Milestone 5</span>
+              <span class="milestone-title">Regulatory Interaction</span>
+            </div>
+            <div class="milestone-status">
+              <select class="milestone-status-select status-yet-to-start" disabled>
+                <option value="yet-to-start">Yet-to-Start</option>
+              </select>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+          </div>
+          
+          <div class="milestone-content">
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Submission to Regulatory Authority</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Mark Johnson</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">01-03-2026</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">15-03-2026</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Review & Response to Queries</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Rachel Green</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">10-03-2026</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">30-04-2026</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 6: Post Approval -->
+        <div class="milestone-section" data-milestone="6">
+          <div class="milestone-header">
+            <div class="milestone-info">
+              <span class="milestone-number">Milestone 6</span>
+              <span class="milestone-title">Approval and PLC Management</span>
+            </div>
+            <div class="milestone-status">
+              <select class="milestone-status-select status-yet-to-start" disabled>
+                <option value="yet-to-start">Yet-to-Start</option>
+              </select>
+              <i class="fa-solid fa-chevron-down toggle-icon"></i>
+            </div>
+          </div>
+          
+          <div class="milestone-content">
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Approval & Implementation</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Dr. Kevin Murphy</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">01-05-2026</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">31-05-2026</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item">
+              <div class="task-info">
+                <i class="fa-solid fa-circle task-icon"></i>
+                <div class="task-details">
+                  <div class="task-name">Post-Approval Monitoring</div>
+                  <div class="task-meta">
+                    <span class="owner">Owner: Dr. Helen Clark</span>
+                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                  </div>
+                </div>
+              </div>
+              <div class="task-dates">
+                <div class="date-column">
+                  <div class="date-label">Start Date</div>
+                  <div class="date-value">15-05-2026</div>
+                </div>
+                <div class="date-column">
+                  <div class="date-label">End Date</div>
+                  <div class="date-value">Ongoing</div>
+                </div>
+              </div>
+              <div class="task-metrics">
+                <div class="metric-item">
+                  <i class="fa-solid fa-info-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Query Tracker -->
+      <div class="section">
+        <h3><i class="fa-solid fa-question-circle"></i> QUERY TRACKER</h3>
+        <div class="query-table-container">
+          <table class="query-table">
+            <thead>
+              <tr>
+                <th>Query ID</th>
+                <th>Query Description</th>
+                <th>Submission ID</th>
+                <th>Brand</th>
+                <th>Dosage</th>
+                <th>Market</th>
+                <th>Agency</th>
+                <th>Received Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Owner</th>
+                <th>Document ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>QID001</td>
+                <td>Confirm that your stability-indicating analytical methods have been validated per ICH Q2(R2), including forced degradation studies</td>
+                <td>SID09020</td>
+                <td>Nocoaralyn</td>
+                <td>50mg</td>
+                <td>EU</td>
+                <td>FDA</td>
+                <td>12-09-2025</td>
+                <td>12-10-2025</td>
+                <td><span class="status-badge wip">WIP</span></td>
+                <td>S. Menon</td>
+                <td>DID30459</td>
+              </tr>
+              <tr>
+                <td>QID002</td>
+                <td>What is your control strategy for dissolution?</td>
+                <td>SID09020</td>
+                <td>Nocoaralyn</td>
+                <td>50mg</td>
+                <td>JP</td>
+                <td>FDA</td>
+                <td>12-09-2025</td>
+                <td>12-10-2025</td>
+                <td><span class="status-badge wip">WIP</span></td>
+                <td>S. Menon</td>
+                <td>DID30459</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Footer -->
+  <footer>
+    <p>Contact Us</p>
+    <div class="footer-icons">
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+    </div>
+    <p>&copy; 2025 AURA. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Milestone toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const milestoneHeaders = document.querySelectorAll('.milestone-header');
+      
+      milestoneHeaders.forEach(header => {
+        header.addEventListener('click', function(e) {
+          // Don't toggle if clicking on the select dropdown
+          if (e.target.tagName === 'SELECT') return;
+          
+          const milestoneSection = this.parentElement;
+          const toggleIcon = this.querySelector('.toggle-icon');
+          
+          milestoneSection.classList.toggle('expanded');
+          
+          if (milestoneSection.classList.contains('expanded')) {
+            toggleIcon.classList.remove('fa-chevron-down');
+            toggleIcon.classList.add('fa-chevron-up');
+          } else {
+            toggleIcon.classList.remove('fa-chevron-up');
+            toggleIcon.classList.add('fa-chevron-down');
+          }
+        });
+      });
+    });
+
+    // Dynamic milestone status update function
+    function updateMilestoneStatus(milestoneNumber, status) {
+      const currentMilestone = document.querySelector(`[data-milestone="${milestoneNumber}"]`);
+      const currentSelect = currentMilestone.querySelector('.milestone-status-select');
+      
+      // Update current milestone styling
+      currentSelect.className = `milestone-status-select status-${status}`;
+      
+      if (status === 'complete') {
+        // When current milestone is completed
+        const nextMilestone = document.querySelector(`[data-milestone="${milestoneNumber + 1}"]`);
+        
+        if (nextMilestone) {
+          const nextSelect = nextMilestone.querySelector('.milestone-status-select');
+          
+          // Enable and activate next milestone
+          nextSelect.disabled = false;
+          nextSelect.innerHTML = `
+            <option value="ongoing">Ongoing</option>
+            <option value="complete">Complete</option>
+          `;
+          nextSelect.value = 'ongoing';
+          nextSelect.className = 'milestone-status-select status-ongoing';
+          nextSelect.onchange = () => updateMilestoneStatus(milestoneNumber + 1, nextSelect.value);
+          
+          // Expand next milestone (auto-behavior)
+          nextMilestone.classList.add('expanded');
+          const nextToggleIcon = nextMilestone.querySelector('.toggle-icon');
+          nextToggleIcon.classList.remove('fa-chevron-down');
+          nextToggleIcon.classList.add('fa-chevron-up');
+          
+          // Auto-collapse current milestone when moving to next (but allow manual override)
+          currentMilestone.classList.remove('expanded');
+          const currentToggleIcon = currentMilestone.querySelector('.toggle-icon');
+          currentToggleIcon.classList.remove('fa-chevron-up');
+          currentToggleIcon.classList.add('fa-chevron-down');
+          
+          // Auto-collapse all previous milestones (but allow manual override)
+          for (let i = 1; i < milestoneNumber; i++) {
+            const previousMilestone = document.querySelector(`[data-milestone="${i}"]`);
+            if (previousMilestone) {
+              previousMilestone.classList.remove('expanded');
+              const previousToggleIcon = previousMilestone.querySelector('.toggle-icon');
+              previousToggleIcon.classList.remove('fa-chevron-up');
+              previousToggleIcon.classList.add('fa-chevron-down');
+            }
+          }
+        }
+        
+        // Keep the complete option but allow changing back if needed
+        currentSelect.innerHTML = `
+          <option value="complete">Complete</option>
+          <option value="ongoing">Ongoing</option>
+        `;
+        
+      } else if (status === 'ongoing') {
+        // If set back to ongoing, reset all subsequent milestones
+        for (let i = milestoneNumber + 1; i <= 6; i++) {
+          const subsequentMilestone = document.querySelector(`[data-milestone="${i}"]`);
+          if (subsequentMilestone) {
+            const subsequentSelect = subsequentMilestone.querySelector('.milestone-status-select');
+            
+            // Reset to disabled yet-to-start
+            subsequentSelect.disabled = true;
+            subsequentSelect.innerHTML = `<option value="yet-to-start">Yet-to-Start</option>`;
+            subsequentSelect.value = 'yet-to-start';
+            subsequentSelect.className = 'milestone-status-select status-yet-to-start';
+            subsequentSelect.onchange = null;
+            
+            // Collapse subsequent milestones
+            subsequentMilestone.classList.remove('expanded');
+            const subsequentToggleIcon = subsequentMilestone.querySelector('.toggle-icon');
+            subsequentToggleIcon.classList.remove('fa-chevron-up');
+            subsequentToggleIcon.classList.add('fa-chevron-down');
+          }
+        }
+        
+        // Ensure current milestone stays expanded when it becomes ongoing
+        currentMilestone.classList.add('expanded');
+        const currentToggleIcon = currentMilestone.querySelector('.toggle-icon');
+        currentToggleIcon.classList.remove('fa-chevron-down');
+        currentToggleIcon.classList.add('fa-chevron-up');
+        
+        // Auto-collapse previous milestones (but allow manual override)
+        for (let i = 1; i < milestoneNumber; i++) {
+          const previousMilestone = document.querySelector(`[data-milestone="${i}"]`);
+          if (previousMilestone) {
+            previousMilestone.classList.remove('expanded');
+            const previousToggleIcon = previousMilestone.querySelector('.toggle-icon');
+            previousToggleIcon.classList.remove('fa-chevron-up');
+            previousToggleIcon.classList.add('fa-chevron-down');
+          }
+        }
+      }
+    }
+
+    // Initialize the workflow on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const milestoneHeaders = document.querySelectorAll('.milestone-header');
+      
+      milestoneHeaders.forEach(header => {
+        header.addEventListener('click', function(e) {
+          // Don't toggle if clicking on the select dropdown
+          if (e.target.tagName === 'SELECT' || e.target.closest('select')) return;
+          
+          // Only toggle if clicking on the arrow icon or header area (not dropdown)
+          if (e.target.classList.contains('toggle-icon') || 
+              e.target.classList.contains('milestone-header') ||
+              (!e.target.closest('.milestone-status'))) {
+            
+            const milestoneSection = this.parentElement;
+            const toggleIcon = this.querySelector('.toggle-icon');
+            
+            // Always allow manual toggle regardless of milestone status
+            milestoneSection.classList.toggle('expanded');
+            
+            if (milestoneSection.classList.contains('expanded')) {
+              toggleIcon.classList.remove('fa-chevron-down');
+              toggleIcon.classList.add('fa-chevron-up');
+            } else {
+              toggleIcon.classList.remove('fa-chevron-up');
+              toggleIcon.classList.add('fa-chevron-down');
+            }
+          }
+        });
+      });
+      
+      // Also add specific click handlers for the arrow icons
+      const toggleIcons = document.querySelectorAll('.toggle-icon');
+      toggleIcons.forEach(icon => {
+        icon.addEventListener('click', function(e) {
+          e.stopPropagation(); // Prevent the header click from firing
+          
+          const milestoneSection = this.closest('.milestone-section');
+          const toggleIcon = this;
+          
+          // Always allow manual toggle
+          milestoneSection.classList.toggle('expanded');
+          
+          if (milestoneSection.classList.contains('expanded')) {
+            toggleIcon.classList.remove('fa-chevron-down');
+            toggleIcon.classList.add('fa-chevron-up');
+          } else {
+            toggleIcon.classList.remove('fa-chevron-up');
+            toggleIcon.classList.add('fa-chevron-down');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+

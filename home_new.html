@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA - Automated Unified Regulatory Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header - Exact match to Ria.html */
+    .header {
+      background: #3e9ca8;
+      color: white;
+      padding: 20px;
+      border-radius: 0;
+      position: relative;
+      text-align: center;
+    }
+    .header img {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 150px;
+      width: auto;
+      object-fit: contain;
+      left: 0%;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.2em;
+    }
+    .header p {
+      margin: 5px 0 0 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+
+    /* Layout wrapper - Exact match to Ria.html */
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+
+    /* Sidebar - Exact match to Ria.html */
+    .sidebar {
+      width: 110px;
+      background: #3e9ca8;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      color: white;
+      text-decoration: none;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      width: 100%;
+    }
+    .sidebar a:hover {
+      background: #374151;
+    }
+    .sidebar a i {
+      margin-right: 10px;
+    }
+
+    /* Main Content - Match Ria.html structure */
+    .main {
+      flex: 1;
+      background: #f3f4f6;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      background: #3e9ca8;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .welcome-section h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    .welcome-section p {
+      margin: 5px 0 0 0;
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    /* Services Grid */
+    .services-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .services-section h2 {
+      color: #3e9ca8;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .service-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #3e9ca8;
+      transition: transform 0.2s;
+    }
+    .service-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .service-card h3 {
+      color: #3e9ca8;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .service-card h3 i {
+      margin-right: 10px;
+      font-size: 1.2em;
+    }
+    .service-card p {
+      color: #666;
+      line-height: 1.6;
+    }
+    .service-card a {
+      color: #3e9ca8;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .service-card a:hover {
+      text-decoration: underline;
+    }
+
+    /* News Feed Section */
+    .news-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .news-section h2 {
+      color: #3e9ca8;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+    .news-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-left: 3px solid #22c55e;
+    }
+    .news-item:last-child {
+      margin-bottom: 0;
+    }
+    .news-item p {
+      margin: 0;
+      color: #333;
+    }
+    .fda-label {
+      background: #22c55e;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 90px;
+        padding: 15px 10px;
+      }
+      .sidebar a {
+        padding: 8px;
+        font-size: 12px;
+      }
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+      .header h1 {
+        font-size: 1.8em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 70px;
+        padding: 10px 5px;
+      }
+      .sidebar a {
+        padding: 6px;
+        font-size: 11px;
+      }
+      .main {
+        padding: 15px;
+      }
+      .header h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <!-- Logo in top-left -->
+    <img src="footer-logo.png" alt="Logo">
+    <h1>Automated Unified Regulatory Assistant</h1>
+    <p>AURA - Turning Regulatory Chaos into Clarity</p>
+  </div>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="home.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="Ria.html"><i class="fa-solid fa-robot"></i> RIA</a>
+      <a href="Prism.html"><i class="fa-solid fa-database"></i> PRISM</a>
+      <a href="#"><i class="fa-solid fa-bolt"></i> RISE</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h1>Welcome to AURA</h1>
+        <p>Your comprehensive regulatory management platform</p>
+      </div>
+
+      <!-- Services Section -->
+      <div class="services-section">
+        <h2><i class="fa-solid fa-cogs"></i> Our Services</h2>
+        <div class="service-grid">
+          <div class="service-card">
+            <h3><i class="fa-solid fa-robot"></i> RIA - Regulatory Impact Analyzer</h3>
+            <p>AI-powered regulatory monitoring and impact analysis system. Stay ahead of regulatory changes with intelligent alerts and comprehensive impact assessments.</p>
+            <a href="Ria.html">Launch RIA →</a>
+          </div>
+          <div class="service-card">
+            <h3><i class="fa-solid fa-database"></i> PRISM - Regulatory Integration & Submission Engine</h3>
+            <p>Streamlined workflow management for regulatory submissions. Track milestones, manage documents, and ensure compliance with automated processes.</p>
+            <a href="Prism.html">Launch PRISM →</a>
+          </div>
+          <div class="service-card">
+            <h3><i class="fa-solid fa-bolt"></i> RISE - Regulatory Intelligence & Strategy Engine</h3>
+            <p>Strategic regulatory intelligence platform. Get actionable insights and strategic recommendations for your regulatory roadmap.</p>
+            <a href="#">Launch RISE →</a>
+          </div>
+          <div class="service-card">
+            <h3><i class="fa-solid fa-chart-line"></i> Analytics Dashboard</h3>
+            <p>Comprehensive analytics and reporting tools. Monitor performance, track compliance metrics, and generate detailed regulatory reports.</p>
+            <a href="#">View Analytics →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Feed Section -->
+      <div class="news-section">
+        <h2><i class="fa-solid fa-newspaper"></i> News Feed</h2>
+        <div class="news-item">
+          <p>This is a new update for Oncology drugs <span class="fda-label">FDA</span></p>
+        </div>
+        <div class="news-item">
+          <p>This is a new update for Oncology drugs <span class="fda-label">FDA</span></p>
+        </div>
+        <div class="news-item">
+          <p>This is a new update for Oncology drugs <span class="fda-label">FDA</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA - Automated Unified Regulatory Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+ 
+    /* Header */
+    .header {
+      background: #3e9ca8;
+      color: white;
+      padding: 20px;
+      border-radius: 0;
+      position: relative;
+      text-align: center;
+    }
+    .header img {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 150px; /* adjust logo size */
+      width: auto;
+      object-fit: contain;
+      left: 0%;
+    }
+    
+    .user-section {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .user-section:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+    
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3e9ca8;
+      font-size: 1em;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .user-role {
+      font-size: 0.85em;
+      font-weight: 600;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    .user-status {
+      font-size: 0.7em;
+      margin: 2px 0 0 0;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Header Action Buttons */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 12px;
+    }
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .action-btn i {
+      font-size: 0.9em;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 0.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 2px solid #3e9ca8;
+    }
+    
+    .settings-btn:hover i {
+      animation: rotate 0.5s ease-in-out;
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(180deg); }
+    }
+    
+    /* Floating Icons in Header */
+    .floating-icons {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .floating-icon {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 2em;
+      animation: float 8s ease-in-out infinite;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    .ria-icon {
+      top: 15%;
+      left: 15%;
+      animation-delay: 0s;
+      animation-duration: 6s;
+    }
+    
+    .rise-icon {
+      top: 25%;
+      right: 25%;
+      animation-delay: 1s;
+      animation-duration: 7s;
+    }
+    
+    .prism-icon {
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 2s;
+      animation-duration: 8s;
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.5;
+      }
+      25% {
+        transform: translateY(-15px) rotate(90deg);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateY(-10px) rotate(180deg);
+        opacity: 0.6;
+      }
+      75% {
+        transform: translateY(-20px) rotate(270deg);
+        opacity: 0.9;
+      }
+    }
+    
+    /* Header Content Enhancement */
+    .header h1 {
+      position: relative;
+      z-index: 2;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: titleGlow 4s ease-in-out infinite alternate;
+    }
+    
+    .header p {
+      position: relative;
+      z-index: 2;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    @keyframes titleGlow {
+      0% {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+      100% {
+        text-shadow: 2px 2px 8px rgba(255,255,255,0.2), 
+                     2px 2px 4px rgba(0,0,0,0.3);
+      }
+    }
+    
+    .user-section {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 12px 16px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .user-section:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.02);
+    }
+    
+    .user-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3e9ca8;
+      font-size: 1.2em;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .user-role {
+      font-size: 0.85em;
+      font-weight: 600;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    .user-status {
+      font-size: 0.7em;
+      margin: 2px 0 0 0;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+ 
+    /* Layout wrapper */
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+ 
+    /* Sidebar */
+    .sidebar {
+      width: 110px;
+      background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      width: calc(100% - 30px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(5px);
+    }
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(5px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+      font-weight: 700;
+    }
+    .sidebar a i {
+      margin-right: 12px;
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Quick Stats Styles */
+    .quick-stats {
+      width: 100%;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 12px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .stats-header {
+      text-align: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stats-header h4 {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .stats-header i {
+      display: block;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .stat-item {
+      margin-bottom: 8px;
+      padding: 8px 6px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+
+    .stat-change {
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .stat-change.positive {
+      color: #4ade80;
+    }
+
+    .stat-change.negative {
+      color: #f87171;
+    }
+
+    .stat-change i {
+      font-size: 8px;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+    }
+
+    /* Animated arrows */
+    .stat-change.positive i {
+      animation-name: bounceUp;
+    }
+
+    .stat-change.negative i {
+      animation-name: bounceDown;
+    }
+
+    @keyframes bounceUp {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-4px);
+      }
+      60% {
+        transform: translateY(-2px);
+      }
+    }
+
+    @keyframes bounceDown {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(4px);
+      }
+      60% {
+        transform: translateY(2px);
+      }
+    }
+
+    /* Add glow effect for extra visual appeal */
+    .stat-change.positive i {
+      text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    }
+
+    .stat-change.negative i {
+      text-shadow: 0 0 8px rgba(248, 113, 113, 0.6);
+    }
+
+    /* Hover effect for enhanced interactivity */
+    .stat-item:hover .stat-change.positive i {
+      animation-duration: 0.8s;
+      text-shadow: 0 0 12px rgba(74, 222, 128, 0.8);
+    }
+
+    .stat-item:hover .stat-change.negative i {
+      animation-duration: 0.8s;
+      text-shadow: 0 0 12px rgba(248, 113, 113, 0.8);
+    }
+ 
+    /* Main Content */
+    .main {
+      flex: 1;
+      background: #f3f4f6;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+ 
+    /* Cards Layout */
+    .cards-container {
+      display: flex;
+      gap: 20px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+ 
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      flex: 1;
+      min-width: 280px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-top: 4px solid #3e9ca8;
+      position: relative;
+      overflow: hidden;
+      transform: perspective(1000px) rotateX(0deg);
+      animation: cardFadeIn 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+    
+    .card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-top-color: #2d7a85;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, rgba(62, 156, 168, 0.1), rgba(62, 156, 168, 0.05));
+      border-radius: 0 0 0 100%;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover::before {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(45deg, rgba(62, 156, 168, 0.15), rgba(62, 156, 168, 0.08));
+    }
+    
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .card:hover::after {
+      opacity: 1;
+    }
+ 
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #2d3748;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      transform: translateX(0);
+    }
+    
+    .card:hover h3 {
+      color: #1a202c;
+      transform: translateX(5px);
+    }
+    
+    .card h3::before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      font-size: 1.5em;
+      color: #3e9ca8;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: scale(1) rotate(0deg);
+    }
+    
+    .card:hover h3::before {
+      color: #2d7a85;
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .card h3.detective::before {
+      content: '\f21b'; /* Detective/Search icon */
+    }
+    
+    .card h3.librarian::before {
+      content: '\f02d'; /* Book/Library icon */
+    }
+    
+    .card h3.guide::before {
+      content: '\f14e'; /* Map/Guide icon */
+    }
+    
+    .card p {
+      color: #4a5568;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 0.95em;
+    }
+ 
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .card ul li {
+      margin: 8px 0;
+      transition: all 0.3s ease;
+      transform: translateX(0);
+      opacity: 0.9;
+    }
+    
+    .card:hover ul li {
+      transform: translateX(8px);
+      opacity: 1;
+    }
+    
+    .card ul li:nth-child(1) { transition-delay: 0.05s; }
+    .card ul li:nth-child(2) { transition-delay: 0.1s; }
+    .card ul li:nth-child(3) { transition-delay: 0.15s; }
+    .card ul li:nth-child(4) { transition-delay: 0.2s; }
+    
+    .card ul li i {
+      margin-right: 8px;
+      color: #2d9ca9;
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+    
+    .card:hover ul li i {
+      color: #256b75;
+      transform: scale(1.1);
+    }
+ 
+    .launch-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+      position: relative;
+      overflow: hidden;
+      transform: translateY(0) scale(1);
+    }
+    
+    .launch-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -200%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .launch-btn:hover {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+    }
+    
+    .launch-btn:hover::before {
+      left: 200%;
+    }
+    
+    .launch-btn:active {
+      transform: translateY(-1px) scale(1.02);
+      transition: all 0.1s ease;
+    }
+ 
+    /* News Feed */
+    .news-feed {
+      background: white;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      border-top: 4px solid #3e9ca8;
+    }
+    
+    .news-feed h2 {
+      margin: 0 0 20px 0;
+      color: #2d3748;
+      font-size: 1.4em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    
+    .news-feed h2 .title-with-icon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .news-feed h2 .title-with-icon::before {
+      content: '\f1ea';
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      color: #3e9ca8;
+      font-size: 1.2em;
+    }
+    
+    .refresh-btn {
+      background: linear-gradient(135deg, #3e9ca8, #2d7a85);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(62, 156, 168, 0.3);
+    }
+    
+    .refresh-btn:hover {
+      background: linear-gradient(135deg, #2d7a85, #256b75);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(62, 156, 168, 0.4);
+    }
+    
+    .refresh-btn:active {
+      transform: translateY(0);
+    }
+    
+    .refresh-btn i {
+      font-size: 0.9em;
+    }
+    
+    .refresh-btn.refreshing i {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes cardFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    /* News Detail Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+    
+    .modal-header {
+      background: linear-gradient(135deg, #3e9ca8, #2d7a85);
+      color: white;
+      padding: 20px 25px;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .modal-title {
+      font-size: 1.3em;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0;
+      flex: 1;
+      margin-right: 15px;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .modal-body {
+      padding: 25px;
+    }
+    
+    .modal-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .modal-date {
+      color: #64748b;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .modal-source {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .modal-category {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 500;
+    }
+    
+    .modal-summary {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #3e9ca8;
+      margin-bottom: 20px;
+    }
+    
+    .modal-summary h4 {
+      margin: 0 0 8px 0;
+      color: #2d3748;
+      font-size: 1em;
+    }
+    
+    .modal-summary p {
+      margin: 0;
+      color: #4a5568;
+      line-height: 1.5;
+    }
+    
+    .modal-details h4 {
+      color: #2d3748;
+      margin: 0 0 12px 0;
+      font-size: 1.1em;
+    }
+    
+    .modal-details p {
+      color: #4a5568;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    
+    .modal-details ul {
+      color: #4a5568;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      padding-left: 20px;
+    }
+    
+    .modal-details ul li {
+      margin-bottom: 8px;
+    }
+    
+    .modal-footer {
+      padding: 20px 25px;
+      background: #f8fafc;
+      border-radius: 0 0 15px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3e9ca8, #2d7a85);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2d7a85, #256b75);
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #475569;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+    
+    .news-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: #f8fafc;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border-left: 4px solid #22c55e;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .news-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      background: #f1f5f9;
+    }
+    
+    .news-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .news-content {
+      flex: 1;
+      margin-right: 15px;
+      position: relative;
+    }
+    
+    .news-content::after {
+      content: 'Click to read more';
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      font-size: 0.75em;
+      color: #3e9ca8;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+    
+    .news-item:hover .news-content::after {
+      opacity: 1;
+    }
+    
+    .news-item a {
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 500;
+      line-height: 1.5;
+      display: block;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+    
+    .news-item a:hover {
+      color: #3e9ca8;
+    }
+    
+    .news-item a::after {
+      content: '\f35d';
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8em;
+      color: #94a3b8;
+      opacity: 0;
+      transition: all 0.2s ease;
+    }
+    
+    .news-item:hover a::after {
+      opacity: 1;
+      right: -5px;
+    }
+    
+    .news-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: #f8fafc;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border-left: 4px solid #22c55e;
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .news-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      background: #f1f5f9;
+      border-left-color: #3e9ca8;
+    }
+    
+    .news-item::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      width: 8px;
+      height: 8px;
+      background: #3e9ca8;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    
+    .news-item:hover::before {
+      opacity: 1;
+    }
+    
+    .fda-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+    }
+    
+    .news-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    
+    .news-time {
+      white-space: nowrap;
+      color: #64748b;
+      font-size: 0.85em;
+      font-weight: 500;
+    }
+    
+    .news-arrow {
+      color: #94a3b8;
+      font-size: 0.8em;
+      transition: all 0.2s ease;
+      opacity: 0.7;
+    }
+    
+    .news-item:hover .news-arrow {
+      color: #3e9ca8;
+      opacity: 1;
+      transform: translateX(3px);
+    }
+ 
+ 
+    /* Footer */
+    footer {
+      background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 5px;
+      text-align: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    }
+    
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .footer-brand i {
+      color: #3e9ca8;
+      font-size: 16px;
+    }
+    
+    .footer-text {
+      font-size: 11px;
+      opacity: 0.8;
+      font-style: italic;
+      margin: 2px 0;
+    }
+    
+    .footer-icons {
+      margin: 6px 0;
+    }
+    
+    .footer-icons a {
+      color: white;
+      margin: 0 8px;
+      font-size: 18px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .footer-icons a:hover {
+      color: #3e9ca8;
+      transform: translateY(-2px) scale(1.1);
+    }
+    
+    .footer-bottom {
+      font-size: 10px;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .footer-bottom .separator {
+      color: #3e9ca8;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <!-- Floating Background Icons -->
+    <div class="floating-icons">
+      <div class="floating-icon ria-icon"><i class="fas fa-robot"></i></div>
+      <div class="floating-icon rise-icon"><i class="fas fa-bolt"></i></div>
+      <div class="floating-icon prism-icon"><i class="fas fa-database"></i></div>
+    </div>
+    
+    <!-- Logo in top-left -->
+    <img src="footer-logo.png" alt="Logo">
+    <h1>Automated Unified Regulatory Assistant</h1>
+    <p>AURA - Turning Regulatory Chaos into Clarity</p>
+    <div class="user-section">
+      <div class="user-avatar">
+        <i class="fas fa-user-shield"></i>
+      </div>
+      <div class="user-info">
+        <div class="user-role">Admin</div>
+        <div class="user-status">
+          <span class="status-dot"></span>
+          System Administrator
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn notification-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <button class="action-btn settings-btn" title="Settings">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Content -->
+  <div class="content-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="home.html" class="active"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="Ria.html"><i class="fa-solid fa-robot"></i> RIA</a>
+      <a href="Rise.html"><i class="fa-solid fa-bolt"></i> RISE</a>
+      <a href="Prism.html"><i class="fa-solid fa-database"></i> PRISM</a>
+      
+      <!-- Quick Stats KPIs -->
+      <div class="quick-stats">
+        <div class="stats-header">
+          <i class="fas fa-chart-bar"></i>
+          <h4>Quick Stats</h4>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Active Alerts</div>
+          <div class="stat-value">15</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 2
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Products</div>
+          <div class="stat-value">142</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 3
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Compliance</div>
+          <div class="stat-value">98.2%</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 0.3%
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">On-Time</div>
+          <div class="stat-value">94.1%</div>
+          <div class="stat-change negative">
+            <i class="fas fa-arrow-down"></i> 1.2%
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Main Content -->
+    <div class="main">
+      <!-- 3 Cards in Row -->
+      <div class="cards-container">
+        <!-- RIA -->
+        <div class="card">
+          <h3 class="detective">RIA - The Detective</h3>
+          <p>AI-powered monitoring and analysis of regulatory updates, guidelines, and changes across global markets.</p>
+          <ul>
+            <li><i class="fa-solid fa-rss"></i> Updates Feeds</li>
+            <li><i class="fa-solid fa-magnifying-glass"></i> Monitors Sources</li>
+            <li><i class="fa-solid fa-chart-line"></i> Analytics Dashboard</li>
+            <li><i class="fa-solid fa-bell"></i> Alert Setting</li>
+          </ul>
+          <a href="Ria.html" class="launch-btn">Launch RIA</a>
+        </div>
+ 
+        <!-- RISE -->
+        <div class="card">
+          <h3 class="guide">RISE - The Guide</h3>
+          <p>Workflow management and timeline tracking for regulatory submissions and milestone management.</p>
+          <ul>
+            <li><i class="fa-solid fa-tasks"></i> Workflow Management</li>
+            <li><i class="fa-solid fa-calendar-alt"></i> Timeline View</li>
+            <li><i class="fa-solid fa-link"></i> Dependencies</li>
+            <li><i class="fa-solid fa-file-alt"></i> Document Links</li>
+          </ul>
+          <a href="Rise.html" class="launch-btn">Launch RISE</a>
+        </div>
+ 
+        <!-- PRISM -->
+        <div class="card">
+          <h3 class="librarian">PRISM - The Librarian</h3>
+          <p>Comprehensive product portfolio and regulatory information management system.</p>
+          <ul>
+            <li><i class="fa-solid fa-box"></i> Product Portfolio</li>
+            <li><i class="fa-solid fa-code-branch"></i> Variation Tracker</li>
+            <li><i class="fa-solid fa-check-circle"></i> Compliance Dashboard</li>
+            <li><i class="fa-solid fa-folder-open"></i> Document Management</li>
+          </ul>
+          <a href="Prism.html" class="launch-btn">Launch PRISM</a>
+        </div>
+      </div>
+ 
+      <!-- News Feed -->
+      <div class="news-feed">
+        <h2>
+          <span class="title-with-icon">NEWS FEED</span>
+          <button class="refresh-btn" onclick="refreshNews()">
+            <i class="fa-solid fa-refresh"></i>
+            Refresh
+          </button>
+        </h2>
+        <div id="news-container">
+          <div class="news-item" onclick="openNewsDetail('oncology-manufacturing')">
+            <div class="news-content">
+              <a href="#" onclick="event.preventDefault()">This is a new update for Oncology drugs manufacturing units</a>
+              <span class="fda-badge">FDA</span>
+            </div>
+            <div class="news-meta">
+              <span class="news-time">2 hours ago</span>
+              <i class="fa-solid fa-chevron-right news-arrow"></i>
+            </div>
+          </div>
+          <div class="news-item" onclick="openNewsDetail('oncology-manufacturing')">
+            <div class="news-content">
+              <a href="#" onclick="event.preventDefault()">This is a new update for Oncology drugs manufacturing units</a>
+              <span class="fda-badge">FDA</span>
+            </div>
+            <div class="news-meta">
+              <span class="news-time">1 day ago</span>
+              <i class="fa-solid fa-chevron-right news-arrow"></i>
+            </div>
+          </div>
+          <div class="news-item" onclick="openNewsDetail('oncology-manufacturing')">
+            <div class="news-content">
+              <a href="#" onclick="event.preventDefault()">This is a new update for Oncology drugs manufacturing units</a>
+              <span class="fda-badge">FDA</span>
+            </div>
+            <div class="news-meta">
+              <span class="news-time">2 hours ago</span>
+              <i class="fa-solid fa-chevron-right news-arrow"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- News Detail Modal -->
+  <div id="newsModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="modal-title"></h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta">
+          <div class="modal-date">
+            <i class="fa-solid fa-clock"></i>
+            <span id="modalDate"></span>
+          </div>
+          <span id="modalSource" class="modal-source"></span>
+          <span id="modalCategory" class="modal-category"></span>
+        </div>
+        <div class="modal-summary">
+          <h4>Summary</h4>
+          <p id="modalSummary"></p>
+        </div>
+        <div class="modal-details">
+          <h4>Details</h4>
+          <div id="modalDetails"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="modal-actions">
+          <button class="btn-primary" onclick="downloadPDF()">
+            <i class="fa-solid fa-download"></i> Download PDF
+          </button>
+          <button class="btn-secondary" onclick="shareNews()">
+            <i class="fa-solid fa-share"></i> Share
+          </button>
+        </div>
+        <small style="color: #64748b;">Last updated: <span id="modalLastUpdated"></span></small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <i class="fas fa-shield-alt"></i>
+        <span>AURA Platform</span>
+      </div>
+      <div class="footer-text">Regulatory Excellence • Global Compliance • Smart Analytics</div>
+    </div>
+    <div class="footer-icons">
+      <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AURA Platform</span>
+      <span class="separator">•</span>
+      <span>Pharmaceutical Intelligence</span>
+    </div>
+  </footer>
+
+  <script>
+    // News data with detailed information
+    const newsDatabase = {
+      "oncology-manufacturing": {
+        title: "This is a new update for Oncology drugs manufacturing units",
+        date: "2 hours ago",
+        source: "FDA",
+        category: "Manufacturing",
+        summary: "The FDA has issued new guidelines for oncology drug manufacturing facilities to enhance quality control and ensure patient safety across all production stages.",
+        details: `
+          <p>The Food and Drug Administration has released comprehensive updates to manufacturing standards for oncology medications, focusing on:</p>
+          <ul>
+            <li><strong>Enhanced Quality Control:</strong> Implementation of advanced testing protocols at every production stage</li>
+            <li><strong>Contamination Prevention:</strong> Stricter cleanroom requirements and environmental monitoring</li>
+            <li><strong>Supply Chain Integrity:</strong> New tracking requirements for raw materials and active pharmaceutical ingredients</li>
+            <li><strong>Documentation Standards:</strong> Updated record-keeping requirements for batch production</li>
+          </ul>
+          <p>These changes affect all manufacturers of oncology drugs and must be implemented within 180 days of the notice publication. The FDA estimates this will impact over 200 manufacturing facilities nationwide.</p>
+          <p><strong>Key Deadlines:</strong></p>
+          <ul>
+            <li>Initial compliance assessment: 60 days</li>
+            <li>Implementation plan submission: 120 days</li>
+            <li>Full compliance: 180 days</li>
+          </ul>
+        `,
+        lastUpdated: "September 10, 2025 2:30 PM"
+      },
+      "cardiovascular-safety": {
+        title: "New FDA guidance on Oncology drug development protocols",
+        date: "Just now",
+        source: "FDA",
+        category: "Drug Development",
+        summary: "FDA introduces updated protocols for oncology drug development focusing on accelerated approval pathways and real-world evidence requirements.",
+        details: `
+          <p>The FDA has announced significant updates to oncology drug development protocols, introducing new pathways for faster patient access to breakthrough therapies:</p>
+          <ul>
+            <li><strong>Accelerated Approval Enhancements:</strong> Streamlined processes for drugs treating unmet medical needs</li>
+            <li><strong>Real-World Evidence Integration:</strong> New requirements for post-market surveillance and data collection</li>
+            <li><strong>Biomarker Validation:</strong> Updated standards for companion diagnostics and personalized medicine approaches</li>
+            <li><strong>Clinical Trial Design:</strong> Flexible trial designs including adaptive and umbrella studies</li>
+          </ul>
+          <p>These protocols aim to reduce development timelines by an average of 18 months while maintaining rigorous safety standards.</p>
+          <p><strong>Implementation Timeline:</strong></p>
+          <ul>
+            <li>New submissions: Effective immediately</li>
+            <li>Ongoing trials: Transition period of 6 months</li>
+            <li>Training programs: Available starting October 2025</li>
+          </ul>
+        `,
+        lastUpdated: "September 10, 2025 4:45 PM"
+      },
+      "biologics-standards": {
+        title: "Updated safety requirements for cardiovascular medications",
+        date: "15 minutes ago",
+        source: "FDA",
+        category: "Drug Safety",
+        summary: "Enhanced safety monitoring requirements for cardiovascular medications including new adverse event reporting protocols and post-market surveillance measures.",
+        details: `
+          <p>The FDA has implemented comprehensive safety updates for cardiovascular medications following recent safety signal analysis:</p>
+          <ul>
+            <li><strong>Enhanced Monitoring:</strong> Mandatory reporting of specific cardiovascular events within 15 days</li>
+            <li><strong>Risk Evaluation Programs:</strong> New REMS requirements for high-risk cardiovascular drugs</li>
+            <li><strong>Patient Registries:</strong> Establishment of national cardiovascular drug safety database</li>
+            <li><strong>Healthcare Provider Training:</strong> Mandatory educational programs on cardiovascular drug safety</li>
+          </ul>
+          <p>These measures apply to all cardiovascular medications approved after 2020 and selected legacy drugs with updated risk profiles.</p>
+          <p><strong>Compliance Requirements:</strong></p>
+          <ul>
+            <li>Immediate reporting protocol: Effective October 1, 2025</li>
+            <li>REMS program enrollment: December 1, 2025</li>
+            <li>Healthcare provider certification: January 15, 2026</li>
+          </ul>
+        `,
+        lastUpdated: "September 10, 2025 4:30 PM"
+      },
+      "labeling-requirements": {
+        title: "FDA approves new manufacturing standards for biologics",
+        date: "1 hour ago",
+        source: "FDA",
+        category: "Biologics",
+        summary: "Revolutionary manufacturing standards for biologics production focusing on advanced analytics, process validation, and quality assurance protocols.",
+        details: `
+          <p>The FDA has approved groundbreaking manufacturing standards for biologics that leverage cutting-edge technology and data analytics:</p>
+          <ul>
+            <li><strong>Process Analytical Technology:</strong> Real-time monitoring and control of critical quality attributes</li>
+            <li><strong>Continuous Manufacturing:</strong> Approval framework for continuous biologics production processes</li>
+            <li><strong>Advanced Analytics:</strong> Machine learning applications for quality prediction and process optimization</li>
+            <li><strong>Facility Design Standards:</strong> Modular and flexible facility requirements for next-generation biologics</li>
+          </ul>
+          <p>These standards represent a paradigm shift towards Industry 4.0 principles in biologics manufacturing, potentially reducing production costs by 30-40%.</p>
+          <p><strong>Implementation Phases:</strong></p>
+          <ul>
+            <li>Phase 1 - New facilities: January 2026</li>
+            <li>Phase 2 - Existing facility upgrades: January 2027</li>
+            <li>Phase 3 - Full compliance: January 2028</li>
+          </ul>
+        `,
+        lastUpdated: "September 10, 2025 3:45 PM"
+      }
+    };
+
+    const currentNewsItems = [
+      "oncology-manufacturing",
+      "oncology-manufacturing", 
+      "oncology-manufacturing"
+    ];
+
+    function openNewsDetail(newsId) {
+      const newsData = newsDatabase[newsId];
+      if (!newsData) return;
+
+      document.getElementById('modalTitle').textContent = newsData.title;
+      document.getElementById('modalDate').textContent = newsData.date;
+      document.getElementById('modalSource').textContent = newsData.source;
+      document.getElementById('modalCategory').textContent = newsData.category;
+      document.getElementById('modalSummary').textContent = newsData.summary;
+      document.getElementById('modalDetails').innerHTML = newsData.details;
+      document.getElementById('modalLastUpdated').textContent = newsData.lastUpdated;
+
+      document.getElementById('newsModal').style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeModal(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('newsModal').style.display = 'none';
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    function downloadPDF() {
+      // Simulate PDF download
+      alert('PDF download started! The document will be available in your downloads folder.');
+    }
+
+    function shareNews() {
+      // Simulate sharing functionality
+      if (navigator.share) {
+        navigator.share({
+          title: document.getElementById('modalTitle').textContent,
+          text: document.getElementById('modalSummary').textContent,
+          url: window.location.href
+        });
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        alert('Share functionality: This news item has been copied to your clipboard.');
+      }
+    }
+
+    function refreshNews() {
+      const refreshBtn = document.querySelector('.refresh-btn');
+      const newsContainer = document.getElementById('news-container');
+      
+      // Add refreshing animation
+      refreshBtn.classList.add('refreshing');
+      refreshBtn.disabled = true;
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        // Updated news data with different items
+        const newsUpdates = [
+          {
+            id: "cardiovascular-safety",
+            title: "New FDA guidance on Oncology drug development protocols",
+            time: "Just now"
+          },
+          {
+            id: "biologics-standards", 
+            title: "Updated safety requirements for cardiovascular medications",
+            time: "15 minutes ago"
+          },
+          {
+            id: "labeling-requirements",
+            title: "FDA approves new manufacturing standards for biologics",
+            time: "1 hour ago"
+          },
+          {
+            id: "oncology-manufacturing",
+            title: "Recent changes in drug labeling requirements",
+            time: "3 hours ago"
+          }
+        ];
+        
+        // Clear existing news
+        newsContainer.innerHTML = '';
+        
+        // Add new news items
+        newsUpdates.forEach(news => {
+          const newsItem = document.createElement('div');
+          newsItem.className = 'news-item';
+          newsItem.onclick = () => openNewsDetail(news.id);
+          newsItem.innerHTML = `
+            <div class="news-content">
+              <a href="#" onclick="event.preventDefault()">${news.title}</a>
+              <span class="fda-badge">FDA</span>
+            </div>
+            <div class="news-meta">
+              <span class="news-time">${news.time}</span>
+              <i class="fa-solid fa-chevron-right news-arrow"></i>
+            </div>
+          `;
+          newsContainer.appendChild(newsItem);
+        });
+        
+        // Remove refreshing animation
+        refreshBtn.classList.remove('refreshing');
+        refreshBtn.disabled = false;
+        
+        // Show success feedback
+        const originalText = refreshBtn.innerHTML;
+        refreshBtn.innerHTML = '<i class="fa-solid fa-check"></i> Updated';
+        setTimeout(() => {
+          refreshBtn.innerHTML = originalText;
+        }, 2000);
+        
+      }, 1500); // 1.5 second delay to simulate API call
+    }
+
+    // Make initial news items clickable
+    document.addEventListener('DOMContentLoaded', function() {
+      const newsLinks = document.querySelectorAll('#news-container .news-content a');
+      newsLinks.forEach((link, index) => {
+        link.onclick = function(e) {
+          e.preventDefault();
+          openNewsDetail(currentNewsItems[index]);
+        };
+      });
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1865 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRISM - Pharmaceutical Regulatory Intelligence & Strategic Monitoring</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+ 
+    /* Header */
+    .header {
+      background: #3e9ca8;
+      color: white;
+      padding: 20px;
+      border-radius: 0;
+      position: relative;
+      text-align: center;
+    }
+    .header img {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 150px; /* adjust logo size */
+      width: auto;
+      object-fit: contain;
+      left: 0%;
+    }
+    
+    .user-section {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .user-section:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+    
+    .user-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3e9ca8;
+      font-size: 1em;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .user-role {
+      font-size: 0.85em;
+      font-weight: 600;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    .user-status {
+      font-size: 0.7em;
+      margin: 2px 0 0 0;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Header Action Buttons */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 12px;
+    }
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .action-btn i {
+      font-size: 0.9em;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 0.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 2px solid #3e9ca8;
+    }
+    
+    .settings-btn:hover i {
+      animation: rotate 0.5s ease-in-out;
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(180deg); }
+    }
+
+    /* Floating Icons in Header */
+    .floating-icons {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .floating-icon {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 2em;
+      animation: float 8s ease-in-out infinite;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    .ria-icon {
+      top: 15%;
+      left: 15%;
+      animation-delay: 0s;
+      animation-duration: 6s;
+    }
+    
+    .rise-icon {
+      top: 25%;
+      right: 25%;
+      animation-delay: 1s;
+      animation-duration: 7s;
+    }
+    
+    .prism-icon {
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 2s;
+      animation-duration: 8s;
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.5;
+      }
+      25% {
+        transform: translateY(-15px) rotate(90deg);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateY(-10px) rotate(180deg);
+        opacity: 0.6;
+      }
+      75% {
+        transform: translateY(-20px) rotate(270deg);
+        opacity: 0.9;
+      }
+    }
+    
+    /* Header Content Enhancement */
+    .header h1 {
+      position: relative;
+      z-index: 2;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: titleGlow 4s ease-in-out infinite alternate;
+    }
+    
+    .header p {
+      position: relative;
+      z-index: 2;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    @keyframes titleGlow {
+      0% {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+      100% {
+        text-shadow: 2px 2px 8px rgba(255,255,255,0.2), 
+                     2px 2px 4px rgba(0,0,0,0.3);
+      }
+    }
+ 
+    /* Layout wrapper */
+    .content-wrapper {
+      display: flex;
+      flex: 1;
+    }
+ 
+    /* Sidebar */
+    .sidebar {
+      width: 110px;
+      background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      width: calc(100% - 30px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(5px);
+    }
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(5px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+      font-weight: 700;
+    }
+    .sidebar a i {
+      margin-right: 12px;
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Quick Stats Styles */
+    .quick-stats {
+      width: 100%;
+      margin-top: 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 12px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .stats-header {
+      text-align: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stats-header h4 {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .stats-header i {
+      display: block;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 4px;
+    }
+
+    .stat-item {
+      margin-bottom: 8px;
+      padding: 8px 6px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stat-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+
+    .stat-change {
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .stat-change.positive {
+      color: #4ade80;
+    }
+
+    .stat-change.negative {
+      color: #f87171;
+    }
+
+    .stat-change i {
+      font-size: 8px;
+    }
+ 
+    /* Main Content */
+    .main {
+      flex: 1;
+      background: #f3f4f6;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* PRISM Header */
+    .prism-header {
+      background: linear-gradient(135deg, #3e9ca8 0%, #2c7a86 50%, #1f5d68 100%);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(62, 156, 168, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+    }
+
+    .prism-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .prism-header h1 {
+      margin: 0;
+      font-size: 1.6em;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .prism-header h1::before {
+      content: '\f1c0';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      font-size: 0.75em;
+      background: linear-gradient(135deg, #ffffff 0%, #e2f3f5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+    }
+
+    .prism-header p {
+      margin: 6px 0 0 0;
+      font-size: 0.9em;
+      opacity: 0.92;
+      font-weight: 400;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.2px;
+    }
+
+    /* Data Table Styles */
+    .data-table-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .table-header h2 {
+      margin: 0;
+      color: #1e293b;
+      font-size: 1.3em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-header h2 i {
+      color: #3e9ca8;
+      font-size: 1.1em;
+    }
+
+    .table-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-export {
+      background: linear-gradient(135deg, #3e9ca8 0%, #2c7a7b 100%);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8em;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(62, 156, 168, 0.3);
+    }
+
+    .btn-export:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(62, 156, 168, 0.4);
+    }
+
+    .search-input {
+      padding: 8px 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 0.8em;
+      width: 180px;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #3e9ca8;
+      box-shadow: 0 0 0 2px rgba(62, 156, 168, 0.1);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 500px;
+      overflow-y: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .data-table {
+      width: 100%;
+      min-width: 1400px;
+      border-collapse: collapse;
+      font-size: 0.85em;
+      background: white;
+    }
+
+    .data-table thead {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .data-table th {
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      font-size: 0.75em;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    /* Specific column widths for better layout */
+    .data-table th:nth-child(1) { width: 120px; } /* Therapeutic Area */
+    .data-table th:nth-child(2) { width: 140px; } /* Drug */
+    .data-table th:nth-child(3) { width: 80px; }  /* Dosage */
+    .data-table th:nth-child(4) { width: 70px; }  /* Market */
+    .data-table th:nth-child(5) { width: 180px; } /* Document Name */
+    .data-table th:nth-child(6) { width: 120px; } /* Document ID */
+    .data-table th:nth-child(7) { width: 90px; }  /* Approved Version */
+    .data-table th:nth-child(8) { width: 130px; } /* Document Status */
+    .data-table th:nth-child(9) { width: 140px; } /* Document Owner */
+    .data-table th:nth-child(10) { width: 120px; } /* Submission ID */
+    .data-table th:nth-child(11) { width: 150px; } /* Submission Workflow Step */
+    .data-table th:nth-child(12) { width: 140px; } /* Submission Workflow Step Status */
+    .data-table th:nth-child(13) { width: 160px; } /* Submission Milestone */
+    .data-table th:nth-child(14) { width: 140px; } /* Submission Milestone Status */
+
+    .data-table th:last-child {
+      border-right: none;
+    }
+
+    .data-table tbody tr {
+      border-bottom: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+
+    .data-table tbody tr:hover {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .data-table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .data-table tbody tr:nth-child(even):hover {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+
+    .data-table td {
+      padding: 10px 8px;
+      border-right: 1px solid #e2e8f0;
+      vertical-align: middle;
+      font-size: 0.85em;
+      line-height: 1.3;
+      word-wrap: break-word;
+    }
+
+    .data-table td:last-child {
+      border-right: none;
+    }
+
+    /* Text truncation for long content */
+    .data-table td:nth-child(5), /* Document Name */
+    .data-table td:nth-child(9), /* Document Owner */
+    .data-table td:nth-child(11), /* Workflow Step */
+    .data-table td:nth-child(13) { /* Milestone */
+      max-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .data-table td:nth-child(5):hover,
+    .data-table td:nth-child(9):hover,
+    .data-table td:nth-child(11):hover,
+    .data-table td:nth-child(13):hover {
+      overflow: visible;
+      white-space: normal;
+      word-wrap: break-word;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Column Filter Styles */
+    .filter-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .filter-header {
+      font-weight: 600;
+      font-size: 0.8em;
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 2px;
+    }
+
+    .column-filter {
+      width: 90%;
+      max-width: 120px;
+      padding: 3px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 0.7em;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .column-filter:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.6);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .column-filter:focus {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: #4ecdc4;
+      box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .column-filter option {
+      background: #34495e;
+      color: white;
+      padding: 4px 8px;
+      border: none;
+    }
+
+    .column-filter option:hover {
+      background: #4ecdc4;
+    }
+
+    /* Update table header to accommodate better filter design */
+    .data-table th {
+      padding: 12px 8px 16px 8px;
+      vertical-align: top;
+      min-height: 80px;
+      position: relative;
+    }
+
+    /* Responsive adjustments for smaller columns */
+    .data-table th:nth-child(3) .column-filter,  /* Dosage */
+    .data-table th:nth-child(4) .column-filter,  /* Market */
+    .data-table th:nth-child(6) .column-filter,  /* Document ID */
+    .data-table th:nth-child(7) .column-filter,  /* Approved Version */
+    .data-table th:nth-child(10) .column-filter { /* Submission ID */
+      max-width: 80px;
+      font-size: 0.65em;
+    }
+
+    /* Wider filters for text-heavy columns */
+    .data-table th:nth-child(5) .column-filter,  /* Document Name */
+    .data-table th:nth-child(11) .column-filter, /* Workflow Step */
+    .data-table th:nth-child(13) .column-filter { /* Milestone */
+      max-width: 140px;
+    }
+
+    /* Active filter indicator */
+    .column-filter.active {
+      background: rgba(78, 205, 196, 0.3);
+      border-color: #4ecdc4;
+      box-shadow: 0 0 0 1px rgba(78, 205, 196, 0.5);
+    }
+
+    .filter-container.has-filter .filter-header {
+      color: #4ecdc4;
+      text-shadow: 0 0 3px rgba(78, 205, 196, 0.3);
+    }
+
+    /* Filter reset button */
+    .filter-reset {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 107, 107, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 0.7em;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .filter-reset:hover {
+      background: rgba(255, 107, 107, 1);
+      transform: scale(1.1);
+    }
+
+    .filter-reset.show {
+      display: flex;
+    }
+
+    /* Clear filters button */
+    .btn-clear-filters {
+      background: linear-gradient(135deg, #ff6b6b, #ff5252);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: 8px;
+    }
+
+    .btn-clear-filters:hover {
+      background: linear-gradient(135deg, #ff5252, #f44336);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .btn-clear-filters i {
+      margin-right: 6px;
+    }
+
+    /* Export button enhancements */
+    .btn-export {
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-export:hover {
+      background: linear-gradient(135deg, #44a08d, #4ecdc4);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(78, 205, 196, 0.3);
+    }
+
+    .btn-export:active {
+      transform: translateY(0);
+    }
+
+    .btn-export i {
+      margin-right: 6px;
+    }
+
+    /* Status badges */
+    .status {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.7em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      display: inline-block;
+      white-space: nowrap;
+      text-align: center;
+      min-width: 70px;
+    }
+
+    .status.approved {
+      background: #10b981;
+      color: white;
+    }
+
+    .status.pending {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .status.rejected {
+      background: #ef4444;
+      color: white;
+    }
+
+    /* Workflow Status badges */
+    .workflow-status {
+      padding: 3px 6px;
+      border-radius: 8px;
+      font-size: 0.65em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      display: inline-block;
+      white-space: nowrap;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .workflow-status.in-progress {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .workflow-status.pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .workflow-status.on-hold {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .workflow-status.completed {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    /* Milestone Status badges */
+    .milestone-status {
+      padding: 3px 6px;
+      border-radius: 8px;
+      font-size: 0.65em;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      display: inline-block;
+      white-space: nowrap;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .milestone-status.completed {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .milestone-status.in-progress {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .milestone-status.delayed {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .milestone-status.scheduled {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    /* Priority badges */
+    .priority {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+
+    .priority.high {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .priority.medium {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .priority.low {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    /* Score badges */
+    .score {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: 700;
+    }
+
+    .score.excellent {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .score.good {
+      background: #dbeafe;
+      color: #2563eb;
+    }
+
+    .score.needs-improvement {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    /* Action buttons */
+    .btn-action {
+      background: none;
+      border: 1px solid #e2e8f0;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #64748b;
+      margin-right: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background: #3e9ca8;
+      color: white;
+      border-color: #3e9ca8;
+    }
+
+    /* Pagination */
+    .table-pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .pagination-info {
+      color: #64748b;
+      font-size: 0.9em;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pagination-btn, .page-btn {
+      background: white;
+      border: 1px solid #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #64748b;
+      transition: all 0.2s ease;
+    }
+
+    .pagination-btn:hover, .page-btn:hover {
+      background: #3e9ca8;
+      color: white;
+      border-color: #3e9ca8;
+    }
+
+    .page-btn.active {
+      background: #3e9ca8;
+      color: white;
+      border-color: #3e9ca8;
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination-btn:disabled:hover {
+      background: white;
+      color: #64748b;
+      border-color: #e2e8f0;
+    }
+
+    /* Content Area - Currently Blank */
+    .content-area {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+
+    .placeholder-content {
+      text-align: center;
+      color: #666;
+    }
+
+    .placeholder-content i {
+      font-size: 4em;
+      color: #3e9ca8;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .placeholder-content h2 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 1.5em;
+    }
+
+    .placeholder-content p {
+      margin: 0;
+      font-size: 1.1em;
+      opacity: 0.7;
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 5px;
+      text-align: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    }
+    
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .footer-brand i {
+      color: #3e9ca8;
+      font-size: 16px;
+    }
+    
+    .footer-text {
+      font-size: 11px;
+      opacity: 0.8;
+      font-style: italic;
+      margin: 2px 0;
+    }
+    
+    .footer-icons {
+      margin: 6px 0;
+    }
+    
+    .footer-icons a {
+      color: white;
+      margin: 0 8px;
+      font-size: 18px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .footer-icons a:hover {
+      color: #3e9ca8;
+      transform: translateY(-2px) scale(1.1);
+    }
+    
+    .footer-bottom {
+      font-size: 10px;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .footer-bottom .separator {
+      color: #3e9ca8;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <!-- Floating Background Icons -->
+    <div class="floating-icons">
+      <div class="floating-icon ria-icon"><i class="fas fa-robot"></i></div>
+      <div class="floating-icon rise-icon"><i class="fas fa-bolt"></i></div>
+      <div class="floating-icon prism-icon"><i class="fas fa-database"></i></div>
+    </div>
+    
+    <!-- Logo in top-left -->
+    <img src="footer-logo.png" alt="Logo">
+    <h1>Automated Unified Regulatory Assistant</h1>
+    <p>AURA - Turning Regulatory Chaos into Clarity</p>
+    <div class="user-section">
+      <div class="user-avatar">
+        <i class="fas fa-user-shield"></i>
+      </div>
+      <div class="user-info">
+        <div class="user-role">Admin</div>
+        <div class="user-status">
+          <span class="status-dot"></span>
+          System Administrator
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn notification-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <button class="action-btn settings-btn" title="Settings">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Content -->
+  <div class="content-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <a href="home.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="Ria.html"><i class="fa-solid fa-robot"></i> RIA</a>
+      <a href="Rise.html"><i class="fa-solid fa-bolt"></i> RISE</a>
+      <a href="Prism.html" class="active"><i class="fa-solid fa-database"></i> PRISM</a>
+      
+      <!-- Quick Stats KPIs -->
+      <div class="quick-stats">
+        <div class="stats-header">
+          <i class="fas fa-chart-bar"></i>
+          <h4>Quick Stats</h4>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Active Alerts</div>
+          <div class="stat-value">15</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 2
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Products</div>
+          <div class="stat-value">142</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 3
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Compliance</div>
+          <div class="stat-value">98.2%</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> 0.3%
+          </div>
+        </div>
+        
+        <div class="stat-item">
+          <div class="stat-label">Risk Score</div>
+          <div class="stat-value">94.1%</div>
+          <div class="stat-change negative">
+            <i class="fas fa-arrow-down"></i> 1.2%
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Main Content -->
+    <div class="main">
+      <!-- PRISM Header -->
+      <div class="prism-header">
+        <h1>Product Regulatory Information & Submission Management</h1>
+        <p>PRISM - Comprehensive product portolio and regulatory information management</p>
+      </div>
+
+      <!-- Data Table Section -->
+      <div class="data-table-container">
+        <div class="table-header">
+          <h2><i class="fas fa-table"></i> Pharmaceutical Regulatory Document & Submission Management</h2>
+          <div class="table-controls">
+            <button class="btn-export" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+            <button class="btn-clear-filters" id="clearFiltersBtn" style="display: none;"><i class="fas fa-times"></i> Clear Filters</button>
+          </div>
+        </div>
+        
+        <div class="table-wrapper">
+          <table class="data-table" id="prismDataTable">
+            <thead>
+              <tr>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Therapeutic Area</div>
+                    <select class="column-filter" data-column="0">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Drug</div>
+                    <select class="column-filter" data-column="1">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Dosage</div>
+                    <select class="column-filter" data-column="2">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Market</div>
+                    <select class="column-filter" data-column="3">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Document Name</div>
+                    <select class="column-filter" data-column="4">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Document ID</div>
+                    <select class="column-filter" data-column="5">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Approved Version</div>
+                    <select class="column-filter" data-column="6">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Document Status</div>
+                    <select class="column-filter" data-column="7">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Document Owner</div>
+                    <select class="column-filter" data-column="8">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Submission ID</div>
+                    <select class="column-filter" data-column="9">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Submission Workflow Step</div>
+                    <select class="column-filter" data-column="10">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Submission Workflow Step Status</div>
+                    <select class="column-filter" data-column="11">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Submission Milestone</div>
+                    <select class="column-filter" data-column="12">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+                <th>
+                  <div class="filter-container">
+                    <div class="filter-header">Submission Milestone Status</div>
+                    <select class="column-filter" data-column="13">
+                      <option value="">All</option>
+                    </select>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="prism-data-tbody">
+              <!-- Data will be loaded from prism_data.html -->
+              <tr>
+                <td colspan="14" style="text-align: center; padding: 40px;">
+                  <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+                  Loading pharmaceutical data...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="table-pagination">
+          <div class="pagination-info">
+            Showing 1-552 of 552 entries
+          </div>
+          <div class="pagination-controls">
+            <button class="pagination-btn" onclick="previousPage()"><i class="fas fa-chevron-left"></i></button>
+            <span class="page-numbers">
+              <button class="page-btn active">1</button>
+            </span>
+            <button class="pagination-btn" onclick="nextPage()"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+ 
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <i class="fas fa-shield-alt"></i>
+        <span>AURA Platform</span>
+      </div>
+      <div class="footer-text">Regulatory Excellence â€¢ Global Compliance â€¢ Smart Analytics</div>
+    </div>
+    <div class="footer-icons">
+      <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AURA Platform</span>
+      <span class="separator">â€¢</span>
+      <span>Pharmaceutical Intelligence</span>
+    </div>
+  </footer>
+
+  <!-- Include the pharmaceutical data -->
+  <script src="prism_data.js"></script>
+  
+  <script>
+    // Global variables
+    let allData = [];
+    let filteredData = [];
+    let currentFilters = {};
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
+    // Function to convert data to CSV format
+    function convertToCSV(data, headers) {
+      const csvHeaders = headers.join(',');
+      const csvRows = data.map(row => {
+        return row.map(cell => {
+          // Handle cells with commas, quotes, or line breaks
+          if (typeof cell === 'string' && (cell.includes(',') || cell.includes('"') || cell.includes('\n'))) {
+            return `"${cell.replace(/"/g, '""')}"`;
+          }
+          return cell;
+        }).join(',');
+      });
+      
+      return [csvHeaders, ...csvRows].join('\n');
+    }
+
+    // Function to download file
+    function downloadFile(content, filename, contentType) {
+      const blob = new Blob([content], { type: contentType });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    }
+
+    // Function to export data to Excel (CSV format)
+    function exportToExcel() {
+      try {
+        // Get current date for filename
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+        const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS format
+        
+        // Define headers
+        const headers = [
+          'Therapeutic Area',
+          'Drug',
+          'Dosage',
+          'Market',
+          'Document Name',
+          'Document ID',
+          'Approved Version',
+          'Document Status',
+          'Document Owner',
+          'Submission ID',
+          'Submission Workflow Step',
+          'Submission Workflow Step Status',
+          'Submission Milestone',
+          'Submission Milestone Status'
+        ];
+
+        // Use filtered data if filters are applied, otherwise use all data
+        const dataToExport = filteredData.length > 0 ? filteredData : allData;
+        
+        if (dataToExport.length === 0) {
+          alert('No data to export');
+          return;
+        }
+
+        // Convert to CSV format
+        const csvContent = convertToCSV(dataToExport, headers);
+        
+        // Generate filename based on filters
+        let filename = 'Pharmaceutical_Regulatory_Data';
+        
+        // Add filter info to filename if filters are active
+        const activeFilters = Object.keys(currentFilters);
+        if (activeFilters.length > 0) {
+          filename += '_Filtered';
+          // Add first filter value to filename for clarity
+          const firstFilter = currentFilters[activeFilters[0]];
+          if (firstFilter.length <= 20) {
+            filename += `_${firstFilter.replace(/[^a-zA-Z0-9]/g, '_')}`;
+          }
+        }
+        
+        filename += `_${dateStr}_${timeStr}.csv`;
+        
+        // Download the file
+        downloadFile(csvContent, filename, 'text/csv;charset=utf-8;');
+        
+        // Show success message
+        const exportBtn = document.getElementById('exportBtn');
+        const originalText = exportBtn.innerHTML;
+        exportBtn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+        exportBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+        
+        setTimeout(() => {
+          exportBtn.innerHTML = originalText;
+          exportBtn.style.background = '';
+        }, 2000);
+        
+        console.log(`✓ Exported ${dataToExport.length} rows to ${filename}`);
+        
+      } catch (error) {
+        console.error('Export error:', error);
+        alert('Error exporting data. Please try again.');
+      }
+    }
+
+    // Function to apply status styling
+    function getStatusHTML(status, type) {
+      if (type === 'document') {
+        if (status.toLowerCase().includes('approved')) return `<span class="status approved">Approved</span>`;
+        if (status.toLowerCase().includes('review') || status.toLowerCase().includes('pending')) return `<span class="status pending">In Review</span>`;
+        return `<span class="status rejected">WIP</span>`;
+      } else if (type === 'workflow') {
+        if (status.toLowerCase().includes('completed')) return `<span class="workflow-status completed">Completed</span>`;
+        if (status.toLowerCase().includes('progress')) return `<span class="workflow-status in-progress">In Progress</span>`;
+        return `<span class="workflow-status pending">Pending</span>`;
+      } else if (type === 'milestone') {
+        if (status.toLowerCase().includes('completed')) return `<span class="milestone-status completed">Completed</span>`;
+        if (status.toLowerCase().includes('progress')) return `<span class="milestone-status in-progress">In Progress</span>`;
+        return `<span class="milestone-status delayed">Delayed</span>`;
+      }
+      return status;
+    }
+
+    // Function to populate filter dropdowns
+    function populateFilters() {
+      const filterSelects = document.querySelectorAll('.column-filter');
+      
+      filterSelects.forEach((select, index) => {
+        const columnIndex = parseInt(select.dataset.column);
+        const uniqueValues = [...new Set(allData.map(row => row[columnIndex]))].sort();
+        
+        // Clear existing options except "All"
+        select.innerHTML = '<option value="">All</option>';
+        
+        // Add unique values as options
+        uniqueValues.forEach(value => {
+          if (value && value.trim()) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value.length > 20 ? value.substring(0, 20) + '...' : value;
+            option.title = value; // Full text on hover
+            select.appendChild(option);
+          }
+        });
+      });
+    }
+
+    // Function to apply filters
+    function applyFilters() {
+      filteredData = allData.filter(row => {
+        return Object.keys(currentFilters).every(columnIndex => {
+          const filterValue = currentFilters[columnIndex];
+          if (!filterValue) return true; // No filter applied
+          return row[parseInt(columnIndex)] === filterValue;
+        });
+      });
+      
+      // Reset to first page when filters change
+      currentPage = 1;
+      renderTable();
+    }
+
+    // Function to render table with current data and pagination
+    function renderTable() {
+      const tbody = document.getElementById('prism-data-tbody');
+      tbody.innerHTML = '';
+      
+      if (filteredData.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="14" style="text-align: center; padding: 40px; color: #999;">
+              <i class="fas fa-filter" style="margin-right: 10px;"></i>
+              No data matches the current filters
+            </td>
+          </tr>
+        `;
+        updatePagination(0);
+        return;
+      }
+      
+      // Calculate pagination
+      const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+      const startIndex = (currentPage - 1) * rowsPerPage;
+      const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
+      const currentPageData = filteredData.slice(startIndex, endIndex);
+      
+      // Render current page data
+      currentPageData.forEach(rowData => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${rowData[0]}</td>
+          <td>${rowData[1]}</td>
+          <td>${rowData[2]}</td>
+          <td>${rowData[3]}</td>
+          <td>${rowData[4]}</td>
+          <td>${rowData[5]}</td>
+          <td>${rowData[6]}</td>
+          <td>${getStatusHTML(rowData[7], 'document')}</td>
+          <td>${rowData[8]}</td>
+          <td>${rowData[9]}</td>
+          <td>${rowData[10]}</td>
+          <td>${getStatusHTML(rowData[11], 'workflow')}</td>
+          <td>${rowData[12]}</td>
+          <td>${getStatusHTML(rowData[13], 'milestone')}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      updatePagination(filteredData.length, currentPage, totalPages, startIndex + 1, endIndex);
+    }
+
+    // Function to update pagination info and controls
+    function updatePagination(totalCount, page = 1, totalPages = 1, startItem = 1, endItem = totalCount) {
+      const paginationInfo = document.querySelector('.pagination-info');
+      const paginationControls = document.querySelector('.pagination-controls');
+      
+      if (paginationInfo) {
+        if (totalCount === 0) {
+          paginationInfo.textContent = 'No entries found';
+        } else {
+          paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${totalCount} entries`;
+        }
+      }
+      
+      if (paginationControls) {
+        // Update pagination controls
+        const prevBtn = paginationControls.querySelector('.pagination-btn:first-child');
+        const nextBtn = paginationControls.querySelector('.pagination-btn:last-child');
+        const pageNumbers = paginationControls.querySelector('.page-numbers');
+        
+        // Enable/disable previous button
+        if (prevBtn) {
+          prevBtn.disabled = page <= 1;
+        }
+        
+        // Enable/disable next button
+        if (nextBtn) {
+          nextBtn.disabled = page >= totalPages;
+        }
+        
+        // Generate page numbers
+        if (pageNumbers) {
+          pageNumbers.innerHTML = generatePageNumbers(page, totalPages);
+        }
+      }
+    }
+    
+    // Function to generate page number buttons
+    function generatePageNumbers(currentPage, totalPages) {
+      let html = '';
+      
+      if (totalPages <= 7) {
+        // Show all pages if total is 7 or less
+        for (let i = 1; i <= totalPages; i++) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        }
+      } else {
+        // Show smart pagination with ellipsis
+        if (currentPage <= 3) {
+          // Show first 3 pages, ellipsis, last page
+          for (let i = 1; i <= 3; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+          }
+          html += `<span>...</span>`;
+          html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+        } else if (currentPage >= totalPages - 2) {
+          // Show first page, ellipsis, last 3 pages
+          html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+          html += `<span>...</span>`;
+          for (let i = totalPages - 2; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+          }
+        } else {
+          // Show first page, ellipsis, current-1, current, current+1, ellipsis, last page
+          html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+          html += `<span>...</span>`;
+          for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+          }
+          html += `<span>...</span>`;
+          html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+        }
+      }
+      
+      return html;
+    }
+    
+    // Function to go to specific page
+    function goToPage(page) {
+      const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+      if (page >= 1 && page <= totalPages) {
+        currentPage = page;
+        renderTable();
+      }
+    }
+    
+    // Function to go to previous page
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    }
+    
+    // Function to go to next page
+    function nextPage() {
+      const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTable();
+      }
+    }
+
+    // Function to setup filter event listeners
+    function setupFilterListeners() {
+      const filterSelects = document.querySelectorAll('.column-filter');
+      const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+      
+      filterSelects.forEach((select, index) => {
+        select.addEventListener('change', function() {
+          const columnIndex = this.dataset.column;
+          const filterValue = this.value;
+          const container = this.closest('.filter-container');
+          
+          if (filterValue) {
+            currentFilters[columnIndex] = filterValue;
+            this.classList.add('active');
+            container.classList.add('has-filter');
+          } else {
+            delete currentFilters[columnIndex];
+            this.classList.remove('active');
+            container.classList.remove('has-filter');
+          }
+          
+          // Show/hide clear filters button
+          const hasActiveFilters = Object.keys(currentFilters).length > 0;
+          if (clearFiltersBtn) {
+            clearFiltersBtn.style.display = hasActiveFilters ? 'inline-block' : 'none';
+          }
+          
+          applyFilters();
+        });
+      });
+      
+      // Clear all filters button
+      if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+          currentFilters = {};
+          
+          // Reset all filter dropdowns
+          filterSelects.forEach(select => {
+            select.value = '';
+            select.classList.remove('active');
+            select.closest('.filter-container').classList.remove('has-filter');
+          });
+          
+          // Hide clear button
+          this.style.display = 'none';
+          
+          // Reset to show all data and first page
+          filteredData = [...allData];
+          currentPage = 1;
+          renderTable();
+        });
+      }
+    }
+    
+    // Function to setup pagination listeners
+    function setupPaginationListeners() {
+      // Previous and Next buttons are handled by onclick attributes
+      // Page number buttons are generated dynamically with onclick attributes
+      console.log('✅ Pagination listeners ready');
+    }
+
+    // Main function to load data from embedded JavaScript array
+    function loadPrismData() {
+      try {
+        // Check if data is available
+        if (typeof prismData === 'undefined' || !prismData.length) {
+          showErrorMessage('Data not available');
+          return;
+        }
+        
+        // Store all data globally
+        allData = [...prismData];
+        filteredData = [...allData];
+        
+        // Populate filter dropdowns
+        populateFilters();
+        
+        // Setup filter event listeners
+        setupFilterListeners();
+        
+        // Setup export button
+        const exportBtn = document.getElementById('exportBtn');
+        if (exportBtn) {
+          exportBtn.addEventListener('click', exportToExcel);
+        }
+        
+        // Setup pagination event listeners
+        setupPaginationListeners();
+        
+        // Initial render
+        renderTable();
+        
+        console.log(`✅ Loaded ${allData.length} pharmaceutical records with filtering and export enabled`);
+      } catch (error) {
+        console.error('❌ Error loading data:', error);
+        showErrorMessage('Error processing data');
+      }
+    }
+    
+    function showErrorMessage(message = 'Unable to load pharmaceutical data') {
+      document.getElementById('prism-data-tbody').innerHTML = `
+        <tr>
+          <td colspan="14" style="text-align: center; padding: 40px; color: #ff6b6b;">
+            <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i>
+            ${message}
+          </td>
+        </tr>
+      `;
+    }
+
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', loadPrismData);
+  </script>
+</body>
+</html>
+
