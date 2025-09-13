@@ -1815,59 +1815,73 @@
       console.log('✅ Pagination listeners ready');
     }
 
-    // S3 Configuration
+    // S3 Configuration for CSV
     const S3_CONFIG = {
       bucketName: 'prism-database-excel',
       region: 'us-east-1',
-      fileName: 'Prism Data v02.xlsx',
+      fileName: 'prism-data.csv',
       get url() {
         return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${encodeURIComponent(this.fileName)}`;
       }
     };
 
-    // Function to fetch and parse Excel data from S3
+    // Function to parse CSV data
+    function parseCSV(csvText) {
+      const lines = csvText.split('\n').filter(line => line.trim());
+      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      
+      const data = lines.slice(1).map(line => {
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            values.push(current.trim().replace(/"/g, ''));
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim().replace(/"/g, ''));
+        
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = values[index] || '';
+        });
+        return obj;
+      });
+      
+      return data;
+    }
+
+    // Function to fetch and parse CSV data from S3
     async function fetchDataFromS3() {
       try {
-        console.log('🔄 Fetching data from S3:', S3_CONFIG.url);
+        console.log('🔄 Fetching CSV data from S3:', S3_CONFIG.url);
         
         const response = await fetch(S3_CONFIG.url, {
           method: 'GET',
           headers: {
-            'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            'Accept': 'text/csv'
           }
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
         }
 
-        const arrayBuffer = await response.arrayBuffer();
-        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-        
-        // Get the first worksheet
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        
-        // Convert to JSON
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        
-        // Skip header row and convert to object format
-        const headers = jsonData[0];
-        const dataRows = jsonData.slice(1);
-        
-        const formattedData = dataRows.map(row => {
-          const obj = {};
-          headers.forEach((header, index) => {
-            obj[header] = row[index] || '';
-          });
-          return obj;
-        });
+        const csvText = await response.text();
+        const formattedData = parseCSV(csvText);
 
-        console.log(`✅ Successfully loaded ${formattedData.length} records from S3`);
+        console.log(`✅ Successfully loaded ${formattedData.length} records from S3 CSV`);
         return formattedData;
         
       } catch (error) {
-        console.error('❌ Error fetching data from S3:', error);
+        console.error('❌ Error fetching CSV data from S3:', error);
         throw error;
       }
     }
@@ -1908,7 +1922,7 @@
         // Initial render
         renderTable();
         
-        console.log(`✅ Loaded ${allData.length} pharmaceutical records from S3 with filtering and export enabled`);
+        console.log(`✅ Loaded ${allData.length} pharmaceutical records from S3 CSV with filtering and export enabled`);
       } catch (error) {
         console.error('❌ Error loading data from S3:', error);
         showErrorMessage(`Failed to load data from S3: ${error.message}`);
@@ -1921,8 +1935,8 @@
           <td colspan="14" style="text-align: center; padding: 40px;">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
               <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3e9ca8; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
-              <p style="margin: 0; color: #3e9ca8; font-weight: bold;">Loading data from AWS S3...</p>
-              <p style="margin: 0; color: #666; font-size: 12px;">Fetching latest pharmaceutical records</p>
+              <p style="margin: 0; color: #3e9ca8; font-weight: bold;">Loading CSV data from AWS S3...</p>
+              <p style="margin: 0; color: #666; font-size: 12px;">Fetching latest pharmaceutical records from CSV file</p>
             </div>
           </td>
         </tr>
