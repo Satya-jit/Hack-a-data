@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PRISM - Pharmaceutical Regulatory Intelligence & Strategic Monitoring</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Excel parsing library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -1148,6 +1150,12 @@
       color: #3e9ca8;
       font-weight: bold;
     }
+
+    /* S3 Loading Spinner Animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -1424,8 +1432,7 @@
     </div>
   </footer>
 
-  <!-- Include the pharmaceutical data -->
-  <script src="prism_data.js"></script>
+  <!-- S3 Data Integration - Excel file loaded dynamically from AWS S3 -->
   
   <script>
     // Global variables
@@ -1808,17 +1815,93 @@
       console.log('✅ Pagination listeners ready');
     }
 
-    // Main function to load data from embedded JavaScript array
-    function loadPrismData() {
+    // S3 Configuration for CSV
+    const S3_CONFIG = {
+      bucketName: 'prism-database-excel',
+      region: 'us-east-1',
+      fileName: 'prism-data.csv',
+      get url() {
+        return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${encodeURIComponent(this.fileName)}`;
+      }
+    };
+
+    // Function to parse CSV data
+    function parseCSV(csvText) {
+      const lines = csvText.split('\n').filter(line => line.trim());
+      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      
+      const data = lines.slice(1).map(line => {
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            values.push(current.trim().replace(/"/g, ''));
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim().replace(/"/g, ''));
+        
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = values[index] || '';
+        });
+        return obj;
+      });
+      
+      return data;
+    }
+
+    // Function to fetch and parse CSV data from S3
+    async function fetchDataFromS3() {
       try {
-        // Check if data is available
-        if (typeof prismData === 'undefined' || !prismData.length) {
-          showErrorMessage('Data not available');
+        console.log('🔄 Fetching CSV data from S3:', S3_CONFIG.url);
+        
+        const response = await fetch(S3_CONFIG.url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'text/csv'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+        }
+
+        const csvText = await response.text();
+        const formattedData = parseCSV(csvText);
+
+        console.log(`✅ Successfully loaded ${formattedData.length} records from S3 CSV`);
+        return formattedData;
+        
+      } catch (error) {
+        console.error('❌ Error fetching CSV data from S3:', error);
+        throw error;
+      }
+    }
+
+    // Main function to load data from S3
+    async function loadPrismData() {
+      try {
+        // Show loading state
+        showLoadingMessage();
+        
+        // Fetch data from S3
+        const s3Data = await fetchDataFromS3();
+        
+        if (!s3Data || !s3Data.length) {
+          showErrorMessage('No data found in S3 bucket');
           return;
         }
         
         // Store all data globally
-        allData = [...prismData];
+        allData = [...s3Data];
         filteredData = [...allData];
         
         // Populate filter dropdowns
@@ -1839,19 +1922,41 @@
         // Initial render
         renderTable();
         
-        console.log(`✅ Loaded ${allData.length} pharmaceutical records with filtering and export enabled`);
+        console.log(`✅ Loaded ${allData.length} pharmaceutical records from S3 CSV with filtering and export enabled`);
       } catch (error) {
-        console.error('❌ Error loading data:', error);
-        showErrorMessage('Error processing data');
+        console.error('❌ Error loading data from S3:', error);
+        showErrorMessage(`Failed to load data from S3: ${error.message}`);
       }
     }
     
-    function showErrorMessage(message = 'Unable to load pharmaceutical data') {
+    function showLoadingMessage() {
+      document.getElementById('prism-data-tbody').innerHTML = `
+        <tr>
+          <td colspan="14" style="text-align: center; padding: 40px;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+              <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3e9ca8; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
+              <p style="margin: 0; color: #3e9ca8; font-weight: bold;">Loading CSV data from AWS S3...</p>
+              <p style="margin: 0; color: #666; font-size: 12px;">Fetching latest pharmaceutical records from CSV file</p>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+    
+    function showErrorMessage(message = 'Unable to load pharmaceutical data from S3') {
       document.getElementById('prism-data-tbody').innerHTML = `
         <tr>
           <td colspan="14" style="text-align: center; padding: 40px; color: #ff6b6b;">
-            <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i>
-            ${message}
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+              <i class="fas fa-exclamation-triangle" style="font-size: 24px;"></i>
+              <p style="margin: 0; font-weight: bold;">${message}</p>
+              <button onclick="loadPrismData()" style="padding: 8px 16px; background: #3e9ca8; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-refresh" style="margin-right: 5px;"></i>Retry
+              </button>
+              <p style="margin: 0; font-size: 12px; color: #666;">
+                Check S3 bucket permissions and CORS configuration
+              </p>
+            </div>
           </td>
         </tr>
       `;
