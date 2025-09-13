@@ -1603,12 +1603,37 @@
       renderTable();
     }
 
+    // Function to apply status styling with null checks
+    function getStatusHTML(status, type) {
+      // Add null/undefined checks
+      if (!status || typeof status !== 'string') {
+        return '<span class="status">N/A</span>';
+      }
+      
+      const statusLower = status.toLowerCase();
+      
+      if (type === 'document') {
+        if (statusLower.includes('approved')) return `<span class="status approved">Approved</span>`;
+        if (statusLower.includes('review') || statusLower.includes('pending')) return `<span class="status pending">In Review</span>`;
+        return `<span class="status rejected">WIP</span>`;
+      } else if (type === 'workflow') {
+        if (statusLower.includes('completed')) return `<span class="workflow-status completed">Completed</span>`;
+        if (statusLower.includes('progress')) return `<span class="workflow-status in-progress">In Progress</span>`;
+        return `<span class="workflow-status pending">Pending</span>`;
+      } else if (type === 'milestone') {
+        if (statusLower.includes('completed')) return `<span class="milestone-status completed">Completed</span>`;
+        if (statusLower.includes('progress')) return `<span class="milestone-status in-progress">In Progress</span>`;
+        return `<span class="milestone-status delayed">Delayed</span>`;
+      }
+      return status;
+    }
+
     // Function to render table with current data and pagination
     function renderTable() {
       const tbody = document.getElementById('prism-data-tbody');
       tbody.innerHTML = '';
       
-      if (filteredData.length === 0) {
+      if (!filteredData || filteredData.length === 0) {
         tbody.innerHTML = `
           <tr>
             <td colspan="14" style="text-align: center; padding: 40px; color: #999;">
@@ -1627,24 +1652,29 @@
       const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
       const currentPageData = filteredData.slice(startIndex, endIndex);
       
-      // Render current page data
+      // Render current page data with null checks
       currentPageData.forEach(rowData => {
+        if (!rowData) {
+          console.warn('Invalid row data:', rowData);
+          return;
+        }
+        
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${rowData[0]}</td>
-          <td>${rowData[1]}</td>
-          <td>${rowData[2]}</td>
-          <td>${rowData[3]}</td>
-          <td>${rowData[4]}</td>
-          <td>${rowData[5]}</td>
-          <td>${rowData[6]}</td>
-          <td>${getStatusHTML(rowData[7], 'document')}</td>
-          <td>${rowData[8]}</td>
-          <td>${rowData[9]}</td>
-          <td>${rowData[10]}</td>
-          <td>${getStatusHTML(rowData[11], 'workflow')}</td>
-          <td>${rowData[12]}</td>
-          <td>${getStatusHTML(rowData[13], 'milestone')}</td>
+          <td>${rowData['Therapeutic Area'] || rowData[0] || ''}</td>
+          <td>${rowData['Drug'] || rowData[1] || ''}</td>
+          <td>${rowData['Dosage'] || rowData[2] || ''}</td>
+          <td>${rowData['Market'] || rowData[3] || ''}</td>
+          <td>${rowData['Document Name'] || rowData[4] || ''}</td>
+          <td>${rowData['Document ID'] || rowData[5] || ''}</td>
+          <td>${rowData['Approved Version'] || rowData[6] || ''}</td>
+          <td>${getStatusHTML(rowData['Document Status'] || rowData[7], 'document')}</td>
+          <td>${rowData['Document Owner'] || rowData[8] || ''}</td>
+          <td>${rowData['Submission ID'] || rowData[9] || ''}</td>
+          <td>${rowData['Submission Workflow Step'] || rowData[10] || ''}</td>
+          <td>${getStatusHTML(rowData['Submission Workflow Step Status'] || rowData[11], 'workflow')}</td>
+          <td>${rowData['Submission Milestone'] || rowData[12] || ''}</td>
+          <td>${getStatusHTML(rowData['Submission Milestone Status'] || rowData[13], 'milestone')}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -1825,37 +1855,62 @@
       }
     };
 
-    // Function to parse CSV data
+    // Function to parse CSV data with better error handling
     function parseCSV(csvText) {
-      const lines = csvText.split('\n').filter(line => line.trim());
-      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-      
-      const data = lines.slice(1).map(line => {
-        const values = [];
-        let current = '';
-        let inQuotes = false;
+      try {
+        const lines = csvText.split('\n').filter(line => line.trim());
         
-        for (let i = 0; i < line.length; i++) {
-          const char = line[i];
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
-            values.push(current.trim().replace(/"/g, ''));
-            current = '';
-          } else {
-            current += char;
+        if (lines.length === 0) {
+          throw new Error('CSV file is empty');
+        }
+        
+        // Parse headers
+        const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+        console.log('CSV Headers:', headers);
+        
+        const data = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i];
+          const values = [];
+          let current = '';
+          let inQuotes = false;
+          
+          for (let j = 0; j < line.length; j++) {
+            const char = line[j];
+            if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              values.push(current.trim().replace(/"/g, ''));
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          values.push(current.trim().replace(/"/g, ''));
+          
+          // Ensure we have the expected number of columns (pad with empty strings if needed)
+          while (values.length < 14) {
+            values.push('');
+          }
+          
+          // Only add rows that have some data
+          if (values.some(val => val && val.trim())) {
+            const obj = {};
+            headers.forEach((header, index) => {
+              obj[header] = values[index] || '';
+            });
+            data.push(obj);
           }
         }
-        values.push(current.trim().replace(/"/g, ''));
         
-        const obj = {};
-        headers.forEach((header, index) => {
-          obj[header] = values[index] || '';
-        });
-        return obj;
-      });
-      
-      return data;
+        console.log(`Parsed ${data.length} rows from CSV`);
+        return data;
+        
+      } catch (error) {
+        console.error('Error parsing CSV:', error);
+        throw new Error(`CSV parsing failed: ${error.message}`);
+      }
     }
 
     // Function to fetch and parse CSV data from S3
@@ -1866,16 +1921,28 @@
         const response = await fetch(S3_CONFIG.url, {
           method: 'GET',
           headers: {
-            'Accept': 'text/csv'
+            'Accept': 'text/csv,text/plain,*/*'
           }
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
         const csvText = await response.text();
+        
+        if (!csvText || csvText.trim().length === 0) {
+          throw new Error('Received empty CSV file from S3');
+        }
+        
+        console.log('CSV file size:', csvText.length, 'characters');
+        console.log('First 200 characters:', csvText.substring(0, 200));
+        
         const formattedData = parseCSV(csvText);
+
+        if (!formattedData || formattedData.length === 0) {
+          throw new Error('No valid data rows found in CSV file');
+        }
 
         console.log(`✅ Successfully loaded ${formattedData.length} records from S3 CSV`);
         return formattedData;
@@ -1883,15 +1950,14 @@
       } catch (error) {
         console.error('❌ Error fetching CSV data from S3:', error);
         
-        // Enhanced error message with specific guidance
         if (error.message.includes('403')) {
-          throw new Error('S3 Access Denied (403): File permissions not configured. Make CSV file public in S3 bucket.');
+          throw new Error('S3 Access Denied (403): Make CSV file public in S3 bucket');
         } else if (error.message.includes('404')) {
-          throw new Error('S3 File Not Found (404): Check if prism-data.csv exists in bucket.');
-        } else if (error.message.includes('CORS')) {
-          throw new Error('CORS Error: Add CORS configuration to S3 bucket permissions.');
+          throw new Error('S3 File Not Found (404): Check if prism-data.csv exists in bucket');
+        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          throw new Error('Network Error: Check internet connection and S3 URL');
         } else {
-          throw new Error(`S3 Access Error: ${error.message}`);
+          throw error;
         }
       }
     }
