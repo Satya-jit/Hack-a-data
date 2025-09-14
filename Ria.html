@@ -1616,16 +1616,32 @@
     .impacted-data-display,
     .llm-comparison-display,
     .generated-document-display {
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 6px;
-      padding: 15px;
-      height: 300px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 0;
+      padding: 10px 12px;
+      max-height: 260px;
+      min-height: 120px;
       overflow-y: auto;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 10px;
+      display: block;
+      margin-bottom: 8px;
+      box-shadow: none;
+      font-size: 0.97em;
+    }
+
+    /* Custom scrollbar for better visibility */
+    .impacted-data-display::-webkit-scrollbar,
+    .llm-comparison-display::-webkit-scrollbar,
+    .generated-document-display::-webkit-scrollbar {
+      width: 8px;
+      background: #f0f0f0;
+    }
+    .impacted-data-display::-webkit-scrollbar-thumb,
+    .llm-comparison-display::-webkit-scrollbar-thumb,
+    .generated-document-display::-webkit-scrollbar-thumb {
+      background: #c0c0c0;
+      border-radius: 4px;
     }
 
     .generated-document-display {
@@ -1652,19 +1668,22 @@
     }
 
     /* Professional Document Styling */
-    .doc-header {
-      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      text-align: center;
+    .doc-header, .plain-doc-header {
+      background: none;
+      color: #222;
+      padding: 0 0 10px 0;
+      border-radius: 0;
+      margin-bottom: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
     }
 
-    .doc-header h3 {
+    .doc-header h3, .plain-doc-header h3 {
       margin: 0 0 8px 0;
-      font-size: 1.3em;
+      font-size: 1.1em;
       font-weight: 600;
+      color: #222;
+      background: none;
     }
 
     .doc-header h4 {
@@ -1676,10 +1695,10 @@
 
     .regulatory-ref {
       margin: 0;
-      font-size: 0.85em;
-      opacity: 0.8;
-      border-top: 1px solid rgba(255,255,255,0.2);
-      padding-top: 10px;
+      font-size: 0.95em;
+      color: #666;
+      border: none;
+      padding: 0;
     }
 
     .therapeutic-info {
@@ -1837,15 +1856,19 @@
     }
 
     /* AI Draft Professional Styling */
-    .ai-enhancement-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    .ai-enhancement-header, .plain-ai-header {
+      background: none;
+      color: #222;
+      padding: 0 0 10px 0;
+      border-radius: 0;
+      margin-bottom: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      position: static;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
     }
 
     .ai-enhancement-header::before {
@@ -1864,12 +1887,14 @@
       100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
     }
 
-    .ai-enhancement-header h4 {
-      margin: 0 0 8px 0;
-      font-size: 1.2em;
+    .ai-enhancement-header h4, .plain-ai-header h4 {
+      margin: 0;
+      font-size: 1.05em;
       font-weight: 600;
-      position: relative;
-      z-index: 1;
+      color: #222;
+      background: none;
+      position: static;
+      z-index: auto;
     }
 
     .ai-generation-note {
@@ -1881,37 +1906,24 @@
       z-index: 1;
     }
 
-    .ai-improvement {
-      background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-      border: 1px solid #e0e7ff;
-      border-left: 4px solid #667eea;
-      padding: 15px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      position: relative;
-      transition: all 0.3s ease;
+    .ai-improvement, .plain-ai-item {
+      background: none;
+      border: none;
+      padding: 0;
+      margin-bottom: 1.2em;
+      border-radius: 0;
+      color: #333;
+      font-size: 1em;
+      line-height: 1.6;
+      box-shadow: none;
+      position: static;
+      transition: none;
     }
-
-    .ai-improvement:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
-    }
-
-    .ai-improvement strong {
-      color: #4c51bf;
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.95em;
+    .ai-improvement strong, .plain-ai-item strong, .plain-ai-item span[style*='font-weight:600'] {
+      color: #1976d2;
       font-weight: 600;
-    }
-
-    .ai-improvement::before {
-      content: '✨';
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 1.2em;
-      opacity: 0.6;
+      margin-bottom: 0.2em;
+      display: inline;
     }
 
     .analysis-header {
@@ -2247,6 +2259,15 @@
       font-size: 0.8em;
       font-weight: 600;
       display: inline-block;
+    }
+
+    /* Responsive two-column layout for key changes */
+    @media (min-width: 900px) {
+      .key-changes-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 32px;
+      }
     }
 
     .data-item,
@@ -3016,8 +3037,8 @@
                     Complete the impact analysis first to generate AI draft comparison
                   </div>
                 </div>
-                <button class="download-comparison-btn" id="downloadComparisonBtn" onclick="downloadComparison()" style="display: none;">
-                  <i class="fas fa-download"></i> Download Comparison Document
+                <button class="download-comparison-btn" id="downloadComparisonBtn" onclick="downloadComparison()">
+                  <i class="fas fa-download"></i> Download Document
                 </button>
               </div>
               
@@ -3425,9 +3446,11 @@ TIMELINE: 97 days remaining`;
         document.getElementById(`documentId${rowNum}`).textContent = data.documentId;
         document.getElementById(`documentName${rowNum}`).textContent = data.documentName;
         
-        // Make Submission ID clickable
-        const submissionElement = document.getElementById(`submissionId${rowNum}`);
-        submissionElement.innerHTML = `<a href="#" onclick="openSubmissionDetails('${data.submissionId}'); return false;" class="submission-link">${data.submissionId}</a>`;
+  // Make Submission ID clickable - navigate to Rise.html with state params
+  const submissionElement = document.getElementById(`submissionId${rowNum}`);
+  // For the example SID09006 we will navigate to Rise.html and open Dossier Preparation (Milestone 3)
+  const targetUrl = `Rise.html?sid=${data.submissionId}&openMilestone=3&status=prepopulated`;
+  submissionElement.innerHTML = `<a href="${targetUrl}" class="submission-link">${data.submissionId}</a>`;
       });
 
       // Enable all Analyse buttons
@@ -3726,19 +3749,19 @@ TIMELINE: 97 days remaining`;
       setTimeout(() => {
         // Populate only impacted data first
         let impactedHTML = `
-          <div class="original-section">
-            <div class="professional-doc">
-              <div class="doc-header">
-                <h3>📋 Original Document Analysis</h3>
-                <p class="regulatory-ref">${data.newsType}</p>
+          <div class="original-section" style="padding: 0 0 8px 0;">
+            <div class="plain-doc-section">
+              <div class="plain-doc-header" style="border-bottom: 1px solid #e0e0e0; margin-bottom: 12px;">
+                <h3 style="margin: 0 0 4px 0; font-size: 1.08em; font-weight: 700; letter-spacing: 0.01em;">Original Document</h3>
+                <div class="regulatory-ref" style="font-size: 0.97em; color: #888; margin-bottom: 0;">${data.newsType}</div>
               </div>
         `;
         data.impactedData.forEach(item => {
           impactedHTML += `
-            <div class="data-item">
-              <div class="section-title">${item.section}</div>
-              <div class="section-content">${item.content}</div>
-            </div>
+            <section style="margin-bottom: 18px;">
+              <header style="font-weight: 600; font-size: 1em; margin-bottom: 2px; letter-spacing: 0.01em;">${item.section}</header>
+              <div style="font-size: 0.98em; color: #222; line-height: 1.7; padding-left: 2px;">${item.content}</div>
+            </section>
           `;
         });
         impactedHTML += `
@@ -3783,15 +3806,17 @@ TIMELINE: 97 days remaining`;
         const comparisonAnalysis = comparisonData[rowNumber];
         if (comparisonAnalysis) {
           let comparisonHTML = `
-            <div class="ai-draft-section">
-              <div class="ai-enhanced-doc">
-                <div class="ai-enhancement-header">
-                  <h4>🤖 AI-Enhanced Patient Information Leaflet</h4>
-                  <p class="ai-generation-note">Generated using advanced regulatory AI models with enhanced safety protocols</p>
-                </div>
+            <div class="plain-ai-draft-section" style="padding: 0 0 8px 0;">
+              <div class="plain-ai-header" style="display: flex; align-items: center; gap: 0.5em; border-bottom: 1px solid #e0e0e0; margin-bottom: 12px;">
+                <span style="font-size: 1.1em; color: #888;">🤖</span>
+                <h4 style="margin: 0; font-size: 1.05em; font-weight: 700; color: #222; letter-spacing: 0.01em;">AI Draft</h4>
+                <span class="ai-badge" style="background: #f3f3f3; color: #888; font-size: 0.85em; padding: 2px 8px; border-radius: 8px; margin-left: 0.5em; font-weight: 500;">AI</span>
+              </div>
+              <div class="plain-ai-content">
           `;
           comparisonAnalysis.comparison.forEach(item => {
-            comparisonHTML += `<div class="ai-improvement">${item}</div>`;
+            // Remove card/gradient styles, just use normal paragraphs and bold for section titles
+            comparisonHTML += `<section style="margin-bottom: 18px;"><header style="font-weight: 600; font-size: 1em; margin-bottom: 2px; letter-spacing: 0.01em;">${item.replace(/<div class='ai-improvement'><strong>(.*?)<\/strong>.*$/,'$1')}</header><div style=\"font-size: 0.98em; color: #222; line-height: 1.7; padding-left: 2px;\">${item.replace(/<div class='ai-improvement'><strong>.*?<\/strong>(.*)<\/div>/,'$1')}</div></section>`;
           });
           comparisonHTML += `
               </div>
@@ -3886,22 +3911,49 @@ TIMELINE: 97 days remaining`;
         const keyChangesDisplay = document.getElementById('keyChangesDisplay');
         
         if (keyChanges) {
-          let keyChangesHTML = '<div class="key-changes-content">';
-          keyChanges.changes.forEach(change => {
-            keyChangesHTML += `
-              <div class="key-change-item">
-                <div class="key-change-title">
-                  <i class="fas fa-arrow-right"></i>
-                  ${change.title}
-                </div>
-                <div class="key-change-description">${change.description}</div>
-                <div class="key-change-impact">${change.impact}</div>
-              </div>
-            `;
-          });
-          keyChangesHTML += '</div>';
-          
-          keyChangesDisplay.innerHTML = keyChangesHTML;
+          // Build a semantic, styled Key Changes layout
+          const buildChange = (num, heading, content, bullets) => {
+            let item = document.createElement('div');
+            item.className = 'key-change-item';
+
+            const title = document.createElement('div');
+            title.className = 'key-change-title';
+            title.innerHTML = `<span style="color:#92400e;">${num}.</span>&nbsp;<strong>${heading}</strong>`;
+
+            const desc = document.createElement('div');
+            desc.className = 'key-change-description';
+            desc.innerHTML = `<div class='change-text'>${content}</div>`;
+
+            if (bullets && bullets.length) {
+              const ul = document.createElement('ul');
+              ul.style.margin = '8px 0 0 18px';
+              bullets.forEach(b => {
+                const li = document.createElement('li');
+                li.textContent = b;
+                ul.appendChild(li);
+              });
+              desc.appendChild(ul);
+            }
+
+            item.appendChild(title);
+            item.appendChild(desc);
+            return item;
+          };
+
+          // Clear previous content and build new
+          keyChangesDisplay.innerHTML = '';
+          const container = document.createElement('div');
+          container.className = 'key-changes-content';
+
+          container.appendChild(buildChange(1, 'Expanded Risk Information', 'Add a summary of risks associated with long-term use:', ['Misuse, abuse, addiction', 'Overdose (fatal and non-fatal)', 'Opioid-induced hyperalgesia (OIH)', 'Toxic leukoencephalopathy (rare brain condition)']));
+          container.appendChild(buildChange(2, 'Dosing and Duration Guidance', 'Clarify that:', ['Higher doses carry greater risks', 'Risks persist over time', 'Use the lowest effective dose for the shortest duration']));
+          container.appendChild(buildChange(3, 'Safe Discontinuation Warning', 'Add a warning against abrupt discontinuation, which may lead to:', ['Severe withdrawal symptoms', 'Uncontrolled pain', 'Suicidal ideation']));
+          container.appendChild(buildChange(4, 'Opioid-Induced Hyperalgesia (OIH)', 'Include a new warning describing OIH:', ['Increased sensitivity to pain', 'Pain from stimuli not normally painful (e.g., combing hair)']));
+          container.appendChild(buildChange(5, 'Overdose Reversal Agents', 'Recommend discussing naloxone or nalmefene with patients. Include information on how to obtain these agents.'));
+          container.appendChild(buildChange(6, 'Drug Interaction Warnings', 'Expand warnings to include gabapentinoids and other CNS depressants.'));
+          container.appendChild(buildChange(7, 'Digestive Health', 'Add information about opioid-related esophageal issues.'));
+
+          keyChangesDisplay.appendChild(container);
         }
         
         // Update analysis section styling

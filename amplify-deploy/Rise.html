@@ -1045,6 +1045,39 @@
       display: flex;
       flex-direction: column;
     }
+
+    /* Task Status Dropdown Styles */
+    .task-status-select {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .task-status-select:focus {
+      outline: none;
+      border-color: #4F46E5;
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+    }
+
+    .task-status-select.status-yet-to-start {
+      background: #f97316;
+      color: white;
+    }
+
+    .task-status-select.status-in-progress {
+      background: #fbbf24;
+      color: white;
+    }
+
+    .task-status-select.status-complete {
+      background: #22c55e;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -1201,14 +1234,20 @@
           </div>
           
           <div class="milestone-content">
-            <div class="task-item">
+            <div class="task-item" data-task-id="1-1">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Pre-Submission Planning</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Wilson Paul</span>
-                    <span class="progress">Progress: &nbsp;</span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('1-1', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1229,14 +1268,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="1-2">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Clinical Trials Data</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Wilson Paul</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>In Progress</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select status-in-progress" onchange="updateTaskStatus('1-2', this.value)">
+                        <option value="yet-to-start">Yet to Start</option>
+                        <option value="in-progress" selected>In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1257,14 +1302,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="1-3">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Chemistry, Manufacturing, and Controls (CMC)</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Wilson Paul</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('1-3', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1303,14 +1354,20 @@
           </div>
           
           <div class="milestone-content">
-            <div class="task-item">
+            <div class="task-item" data-task-id="2-1">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Regulatory Affairs Documentation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Sarah Mitchell</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>In Progress</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('2-1', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1331,14 +1388,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="2-2">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Regulatory Consultation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: David Chen</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('2-2', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1377,14 +1440,20 @@
           </div>
           
           <div class="milestone-content">
-            <div class="task-item">
+            <div class="task-item" data-task-id="3-1">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Labeling and Packaging Documentation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Robert Kim</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('3-1', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1405,14 +1474,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="3-2">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Pharmacovigilance Data</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Emily Zhang</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('3-2', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1433,14 +1508,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="3-3">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Dossier Update & Document Preparation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Dr. Amanda Foster</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('3-3', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1479,14 +1560,20 @@
           </div>
           
           <div class="milestone-content">
-            <div class="task-item">
+            <div class="task-item" data-task-id="4-1">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Regulatory Submission Compilation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: James Wilson</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('4-1', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1507,14 +1594,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="4-2">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Submission Compilation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Dr. Patricia Lee</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('4-2', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1553,14 +1646,20 @@
           </div>
           
           <div class="milestone-content">
-            <div class="task-item">
+            <div class="task-item" data-task-id="5-1">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Submission to Regulatory Authority</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Mark Johnson</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('5-1', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1581,14 +1680,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="5-2">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Review & Response to Queries</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Rachel Green</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('5-2', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1627,14 +1732,20 @@
           </div>
           
           <div class="milestone-content">
-            <div class="task-item">
+            <div class="task-item" data-task-id="6-1">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Approval & Implementation</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Dr. Kevin Murphy</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('6-1', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1655,14 +1766,20 @@
               </div>
             </div>
 
-            <div class="task-item">
+            <div class="task-item" data-task-id="6-2">
               <div class="task-info">
                 <i class="fa-solid fa-circle task-icon"></i>
                 <div class="task-details">
                   <div class="task-name">Post-Approval Monitoring</div>
                   <div class="task-meta">
                     <span class="owner">Owner: Dr. Helen Clark</span>
-                    <span class="progress">Sub Status: <select class="status-select"><option>Yet-to-Start</option></select></span>
+                    <span class="progress">Sub Status: 
+                      <select class="task-status-select" onchange="updateTaskStatus('6-2', this.value)">
+                        <option value="yet-to-start" selected>Yet to Start</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="complete">Complete</option>
+                      </select>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1930,6 +2047,88 @@
         });
       });
     });
+
+    // Task completion tracking with dropdowns
+    const milestoneTaskCount = {
+      1: 3, 2: 2, 3: 3, 4: 2, 5: 2, 6: 2
+    };
+
+    let completedTasks = {
+      1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
+    };
+
+    // Update task status based on dropdown selection
+    function updateTaskStatus(taskId, status) {
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+      const dropdown = taskElement.querySelector('.task-status-select');
+      
+      // Update dropdown styling based on status
+      dropdown.className = `task-status-select status-${status}`;
+      
+      // Track completion
+      const milestoneNum = parseInt(taskId.split('-')[0]);
+      
+      // Update completion count
+      updateCompletionCount(milestoneNum);
+      
+      // Check if milestone should be marked complete
+      checkMilestoneCompletion(milestoneNum);
+    }
+
+    // Update completion count for a milestone
+    function updateCompletionCount(milestoneNum) {
+      const milestone = document.querySelector(`[data-milestone="${milestoneNum}"]`);
+      const tasks = milestone.querySelectorAll('.task-item');
+      let completed = 0;
+      
+      tasks.forEach(task => {
+        const dropdown = task.querySelector('.task-status-select');
+        if (dropdown && dropdown.value === 'complete') {
+          completed++;
+        }
+      });
+      
+      completedTasks[milestoneNum] = completed;
+    }
+
+    // Check if milestone should be marked complete
+    function checkMilestoneCompletion(milestoneNum) {
+      if (completedTasks[milestoneNum] === milestoneTaskCount[milestoneNum]) {
+        // All tasks in milestone are complete
+        const milestone = document.querySelector(`[data-milestone="${milestoneNum}"]`);
+        const milestoneSelect = milestone.querySelector('.milestone-status-select');
+        
+        // Update milestone status
+        milestoneSelect.innerHTML = '<option value="complete">Complete</option>';
+        milestoneSelect.value = 'complete';
+        milestoneSelect.className = 'milestone-status-select status-complete';
+        milestoneSelect.style.background = '#22c55e';
+        
+        // Enable next milestone
+        enableNextMilestone(milestoneNum);
+      }
+    }
+
+    // Enable next milestone
+    function enableNextMilestone(milestoneNum) {
+      const nextMilestone = document.querySelector(`[data-milestone="${milestoneNum + 1}"]`);
+      
+      if (nextMilestone) {
+        const nextSelect = nextMilestone.querySelector('.milestone-status-select');
+        
+        // Enable and activate next milestone
+        nextSelect.disabled = false;
+        nextSelect.innerHTML = '<option value="ongoing">Ongoing</option>';
+        nextSelect.value = 'ongoing';
+        nextSelect.className = 'milestone-status-select status-ongoing';
+        
+        // Expand next milestone
+        nextMilestone.classList.add('expanded');
+        const nextToggleIcon = nextMilestone.querySelector('.toggle-icon');
+        nextToggleIcon.classList.remove('fa-chevron-down');
+        nextToggleIcon.classList.add('fa-chevron-up');
+      }
+    }
   </script>
 </body>
 </html>
