@@ -1013,6 +1013,39 @@
       font-size: 11px;
     }
 
+    /* View Full Details Button */
+    .view-full-btn {
+      background: #3e9ca8;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .view-full-btn:hover {
+      background: #2c7a84;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .view-full-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .view-full-btn i {
+      font-size: 10px;
+    }
+
     .news-item.collapsed {
       background: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -2362,28 +2395,31 @@
           <!-- Additional News Items -->
           <div class="additional-news">
             
-            <!-- Most Recent - Expanded -->
-            <div class="news-item expanded" onclick="populateImpactTable('cardiovascular-safety')">
+            <!-- Latest ODDA - Opioid Prescribing Info Update -->
+            <div class="news-item expanded" onclick="populateImpactTable('opioid-prescribing')">
               <div class="news-item-header">
                 <div class="news-badges-left">
-                  <div class="news-badge recent">FDA</div>
+                  <div class="news-badge recent">ODDA</div>
                 </div>
               </div>
               <div class="news-content">
                 <div class="news-content-main">
-                  <div class="news-title">New FDA guidance on Oncology drug development protocols</div>
+                  <div class="news-title">ODDA Requires Opioid Pain Medicine Manufacturers to Update Prescribing Information (Long-Term Use)</div>
                   <div class="news-meta">
-                    <span class="news-agency"><i class="fas fa-building"></i> FDA</span>
+                    <span class="news-agency"><i class="fas fa-building"></i> ODDA</span>
                     <span class="news-date"><i class="fas fa-calendar"></i> September 10, 2025 - 4:45 PM</span>
                     <span class="time-left"><i class="fas fa-hourglass-half"></i> 180 days to implement</span>
                   </div>
                   <div class="news-preview">
-                    FDA introduces updated protocols for oncology drug development focusing on accelerated approval pathways and real-world evidence requirements.
+                    ODDA reviewed new PMR studies and requires labeling updates for long-term opioid therapy including clearer risk language, naloxone guidance, tapering recommendations, and monitoring for misuse and overdose.
                   </div>
                   <div class="news-bottom-row">
                     <div class="news-actions">
-                      <button class="impact-analyze-btn" onclick="event.stopPropagation(); populateImpactTable('cardiovascular-safety')">
+                      <button class="impact-analyze-btn" onclick="event.stopPropagation(); populateImpactTable('opioid-prescribing')">
                         <i class="fas fa-chart-line"></i> Impact Analyse
+                      </button>
+                      <button class="view-full-btn" onclick="event.stopPropagation(); window.open('https://perimaitri17.github.io/odda/opioid_prescribing_info.html', '_blank')">
+                        <i class="fas fa-external-link-alt"></i> View Full Details
                       </button>
                     </div>
                     <div class="impacted-documents-badges">
@@ -2397,6 +2433,7 @@
                 </div>
               </div>
             </div>
+            
             
             <!-- Collapsible Items -->
             <div class="collapsible-section">

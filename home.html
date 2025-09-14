@@ -1305,6 +1305,52 @@
       opacity: 1;
       transform: translateX(3px);
     }
+
+    /* News Actions - RIA Button */
+    .news-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .ria-btn {
+      background: #3e9ca8;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .ria-btn.active:hover {
+      background: #2c7a84;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .ria-btn.disabled {
+      background: #9ca3af;
+      color: #6b7280;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .ria-btn.disabled:hover {
+      background: #9ca3af;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .ria-btn i {
+      font-size: 10px;
+    }
  
  
     /* Footer */
@@ -1976,6 +2022,9 @@
           // Add "NEW" badge for items from the last 7 days
           const isRecent = isRecentNews(newsData.dateObject);
           
+          // Check if this is the ODDA opioid news item
+          const isOddaOpioid = newsData.title.includes("ODDA Requires Opioid Pain Medicine Manufacturers to Update Prescribing Information");
+          
           newsItem.innerHTML = `
             <div class="news-content">
               <a href="#" onclick="event.preventDefault()">${newsData.title}</a>
@@ -1983,6 +2032,13 @@
                 <span class="fda-badge">${newsData.source || 'FDA'}</span>
                 ${newsData.url ? '<span class="external-link-badge"><i class="fa-solid fa-external-link-alt"></i> External Link</span>' : ''}
                 ${isRecent ? '<span class="new-badge"><i class="fa-solid fa-star"></i> Recent</span>' : ''}
+              </div>
+              <div class="news-actions">
+                <button class="ria-btn ${isOddaOpioid ? 'active' : 'disabled'}" 
+                        onclick="event.stopPropagation(); ${isOddaOpioid ? 'window.open(\'Ria.html\', \'_blank\')' : 'return false'}"
+                        ${!isOddaOpioid ? 'disabled' : ''}>
+                  <i class="fas fa-chart-line"></i> Go to RIA
+                </button>
               </div>
             </div>
             <div class="news-meta">
