@@ -1605,7 +1605,7 @@
   </footer>
 
   <script>
-    // Real FDA drug safety communications and alerts
+    // Real FDA drug safety communications and alerts (keeping original data)
     const newsDatabase = {
       "leqembi-mri-monitoring": {
         title: "FDA to recommend additional, earlier MRI monitoring for patients with Alzheimer's disease taking Leqembi (lecanemab)",
@@ -1840,6 +1840,9 @@
       
       // Simulate API call delay
       setTimeout(() => {
+        // Add ODDA news items after the "refresh" completes
+        addOddaNewsItems();
+        
         // Check if we have news data to display
         if (Object.keys(newsDatabase).length === 0) {
           // Show placeholder if no data available
@@ -1853,11 +1856,9 @@
             </div>
           `;
         } else {
-          // Re-render with current sorted data
+          // Re-render with current sorted data (including new ODDA items)
           renderNewsItems();
           
-          // Optional: Simulate adding a new item for demonstration
-          // This would typically come from an API call
           console.log('📰 News refreshed - displaying latest items first');
           console.log(`📊 Total news items: ${Object.keys(newsDatabase).length}`);
         }
@@ -1866,9 +1867,9 @@
         refreshBtn.classList.remove('refreshing');
         refreshBtn.disabled = false;
         
-        // Show success feedback
+        // Show success feedback with "Data Refreshed" text
         const originalText = refreshBtn.innerHTML;
-        refreshBtn.innerHTML = '<i class="fa-solid fa-check"></i> Updated';
+        refreshBtn.innerHTML = '<i class="fa-solid fa-check"></i> Data Refreshed';
         setTimeout(() => {
           refreshBtn.innerHTML = originalText;
         }, 2000);
@@ -1898,6 +1899,45 @@
       };
       
       addNewNewsItem(newItemId, newItem);
+    }
+
+    // Function to add ODDA news items from external source
+    function addOddaNewsItems() {
+      // Check if ODDA items are already added to prevent duplicates
+      if (newsDatabase["odda-opioid-update-2025"] || newsDatabase["odda-xaonlora-rems-2025"]) {
+        console.log('📰 ODDA news items already exist, skipping duplicate addition');
+        return;
+      }
+
+      // ODDA News Item 1 - Opioid Pain Medicine Update (Latest from 09-10-2025)
+      const oddaItem1 = {
+        title: "ODDA Requires Opioid Pain Medicine Manufacturers to Update Prescribing Information (Long-Term Use)",
+        date: "09/10/2025",
+        dateObject: new Date("2025-09-10"),
+        source: "ODDA",
+        category: "Drug Safety",
+        summary: "ODDA reviewed new PMR studies and requires labeling updates for long-term opioid therapy including clearer risk language, naloxone guidance, tapering recommendations, and monitoring for misuse and overdose.",
+        url: "https://perimaitri17.github.io/odda/index.html",
+        lastUpdated: "September 10, 2025"
+      };
+
+      // ODDA News Item 2 - Xaonlora REMS Elimination (Latest from 09-10-2025)
+      const oddaItem2 = {
+        title: "ODDA Eliminates REMS for Xaonlora",
+        date: "09/10/2025",
+        dateObject: new Date("2025-09-10"),
+        source: "ODDA",
+        category: "Drug Safety",
+        summary: "ODDA has removed the REMS requirement for Xaonlora; certification and immediate on-site tocilizumab requirements are lifted. Updated labeling and monitoring guidance remain in effect.",
+        url: "https://perimaitri17.github.io/odda/index.html",
+        lastUpdated: "September 10, 2025"
+      };
+
+      // Add the ODDA items to the news database
+      addNewNewsItem("odda-opioid-update-2025", oddaItem1);
+      addNewNewsItem("odda-xaonlora-rems-2025", oddaItem2);
+      
+      console.log('📰 Latest ODDA news items added successfully');
     }
 
     // Function to render news items (can be called to initially populate)
@@ -1957,7 +1997,7 @@
 
     // Initialize page when DOM loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Render initial news items (sorted by date)
+      // Render initial FDA news items (sorted by date) - show existing FDA data immediately
       renderNewsItems();
       
       // Make test function available globally for testing
@@ -1965,7 +2005,7 @@
       window.addNewNewsItem = addNewNewsItem;
       
       // Log current news order for verification
-      console.log('📰 News Feed Initialized');
+      console.log('📰 News Feed Initialized with FDA Data');
       console.log('📅 News items ordered by date (latest first):');
       getSortedNewsItems().forEach((id, index) => {
         const item = newsDatabase[id];
