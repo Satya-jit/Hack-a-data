@@ -1618,6 +1618,191 @@
       font-family: 'Courier New', monospace;
     }
 
+    /* Professional Document Styling */
+    .doc-header {
+      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .doc-header h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+
+    .doc-header h4 {
+      margin: 0 0 12px 0;
+      font-size: 1.1em;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .regulatory-ref {
+      margin: 0;
+      font-size: 0.85em;
+      opacity: 0.8;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 10px;
+    }
+
+    .therapeutic-info {
+      background: #f8f9fa;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 10px;
+    }
+
+    .therapeutic-info strong {
+      color: #2c3e50;
+      display: inline-block;
+      min-width: 140px;
+    }
+
+    .safety-warnings {
+      background: #fff5f5;
+      border: 1px solid #fed7d7;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .contraindications, .precautions {
+      margin-bottom: 15px;
+    }
+
+    .contraindications h5, .precautions h5 {
+      margin: 0 0 10px 0;
+      color: #e53e3e;
+      font-size: 0.95em;
+      font-weight: 600;
+    }
+
+    .precautions h5 {
+      color: #d69e2e;
+    }
+
+    .safety-warnings ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .safety-warnings li {
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+
+    .dosage-guide {
+      background: #f0f8ff;
+      border: 1px solid #bee5eb;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .standard-dose, .admin-instructions {
+      margin-bottom: 15px;
+    }
+
+    .dosage-guide h5 {
+      margin: 0 0 10px 0;
+      color: #0056b3;
+      font-size: 0.95em;
+      font-weight: 600;
+    }
+
+    .dosage-guide p {
+      margin: 5px 0;
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+
+    .dosage-guide strong {
+      color: #2c3e50;
+    }
+
+    .adverse-reactions {
+      background: #fffbf0;
+      border: 1px solid #fbd38d;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .common-adr, .serious-adr {
+      margin-bottom: 15px;
+    }
+
+    .common-adr h5 {
+      margin: 0 0 10px 0;
+      color: #d69e2e;
+      font-size: 0.95em;
+      font-weight: 600;
+    }
+
+    .serious-adr h5 {
+      margin: 0 0 10px 0;
+      color: #e53e3e;
+      font-size: 0.95em;
+      font-weight: 600;
+    }
+
+    .emergency-note {
+      background: #fed7d7;
+      border: 1px solid #e53e3e;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 0.85em;
+      color: #742a2a;
+    }
+
+    .pharma-details {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 15px;
+    }
+
+    .composition, .storage-info, .manufacturer {
+      margin-bottom: 15px;
+    }
+
+    .pharma-details h5 {
+      margin: 0 0 10px 0;
+      color: #2d3748;
+      font-size: 0.95em;
+      font-weight: 600;
+    }
+
+    .pharma-details p {
+      margin: 5px 0;
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+
+    .pharma-details strong {
+      color: #2c3e50;
+      display: inline-block;
+      min-width: 120px;
+    }
+
+    .pharma-details ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .pharma-details li {
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      line-height: 1.4;
+    }
+
     .download-document-btn {
       background: #22c55e;
       color: white;
@@ -2239,6 +2424,91 @@
       line-height: 1.5;
       color: #666;
     }
+
+    /* Document Analysis Sections */
+    .original-section, .ai-draft-section { 
+      margin: 20px 0; 
+      padding: 20px; 
+      border: 1px solid #ddd; 
+      border-radius: 8px; 
+      background: #f9f9f9; 
+    }
+    .original-section h3 { 
+      color: #2c5282; 
+      border-bottom: 2px solid #4299e1; 
+      padding-bottom: 8px; 
+      font-weight: 600;
+      background: linear-gradient(90deg, #f7fafc 0%, #e2e8f0 100%);
+      margin: -20px -20px 15px -20px;
+      padding: 15px 20px 8px 20px;
+      border-radius: 8px 8px 0 0;
+    }
+    .ai-draft-section h3 { 
+      color: #28a745; 
+      border-bottom: 2px solid #28a745; 
+      padding-bottom: 8px; 
+      font-weight: 600;
+      background: #f8f9fa;
+      margin: -20px -20px 15px -20px;
+      padding: 15px 20px 8px 20px;
+      border-radius: 8px 8px 0 0;
+    }
+    .professional-doc { 
+      background: white; 
+      padding: 25px; 
+      border-radius: 6px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+      line-height: 1.6;
+      border-left: 4px solid #4299e1;
+    }
+    .ai-enhanced-doc {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      line-height: 1.6;
+      border-left: 4px solid #28a745;
+      position: relative;
+    }
+    .ai-enhancement-header {
+      background: #28a745;
+      color: white;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.2);
+    }
+    .ai-enhancement-header h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+    .ai-generation-note {
+      margin: 0;
+      font-size: 0.85em;
+      opacity: 0.9;
+      font-style: italic;
+    }
+    .ai-improvement {
+      background: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 12px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .ai-improvement:hover {
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .ai-improvement strong {
+      color: #28a745;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1em;
+    }
   </style>
 </head>
 <body>
@@ -2500,6 +2770,54 @@
                   <td id="submissionMilestone3"></td>
                   <td>
                     <button class="analyse-btn disabled" onclick="analyzeImpact(3)" disabled>Analyse</button>
+                  </td>
+                </tr>
+                <tr id="impactRow4">
+                  <td id="newsFeed4"></td>
+                  <td id="therapeuticArea4"></td>
+                  <td id="brand4"></td>
+                  <td id="dosage4"></td>
+                  <td id="market4"></td>
+                  <td id="documentName4"></td>
+                  <td id="submissionMilestone4"></td>
+                  <td>
+                    <button class="analyse-btn disabled" onclick="analyzeImpact(4)" disabled>Analyse</button>
+                  </td>
+                </tr>
+                <tr id="impactRow5">
+                  <td id="newsFeed5"></td>
+                  <td id="therapeuticArea5"></td>
+                  <td id="brand5"></td>
+                  <td id="dosage5"></td>
+                  <td id="market5"></td>
+                  <td id="documentName5"></td>
+                  <td id="submissionMilestone5"></td>
+                  <td>
+                    <button class="analyse-btn disabled" onclick="analyzeImpact(5)" disabled>Analyse</button>
+                  </td>
+                </tr>
+                <tr id="impactRow6">
+                  <td id="newsFeed6"></td>
+                  <td id="therapeuticArea6"></td>
+                  <td id="brand6"></td>
+                  <td id="dosage6"></td>
+                  <td id="market6"></td>
+                  <td id="documentName6"></td>
+                  <td id="submissionMilestone6"></td>
+                  <td>
+                    <button class="analyse-btn disabled" onclick="analyzeImpact(6)" disabled>Analyse</button>
+                  </td>
+                </tr>
+                <tr id="impactRow7">
+                  <td id="newsFeed7"></td>
+                  <td id="therapeuticArea7"></td>
+                  <td id="brand7"></td>
+                  <td id="dosage7"></td>
+                  <td id="market7"></td>
+                  <td id="documentName7"></td>
+                  <td id="submissionMilestone7"></td>
+                  <td>
+                    <button class="analyse-btn disabled" onclick="analyzeImpact(7)" disabled>Analyse</button>
                   </td>
                 </tr>
               </tbody>
@@ -2855,31 +3173,67 @@ TIMELINE: 97 days remaining`;
     function populateImpactTable(newsId) {
       const impactData = [
         {
-          newsFeed: "FDA Oncology Guidance Update",
-          therapeuticArea: "Oncology",
-          brand: "OncoCure Plus",
-          dosage: "250mg Tablets",
-          market: "US/EU",
-          documentName: "Clinical Study Protocol v2.1",
-          submissionMilestone: "Phase III Completion - Q2 2026"
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management",
+          brand: "Nococaralyn",
+          dosage: "50mg",
+          market: "EU",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09006"
         },
         {
-          newsFeed: "Manufacturing Standards Update",
-          therapeuticArea: "Immunology", 
-          brand: "ImmunoFlex Pro",
-          dosage: "5mg/ml Injectable",
-          market: "Global",
-          documentName: "Manufacturing Process Manual v3.0",
-          submissionMilestone: "BLA Submission - Q4 2025"
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management", 
+          brand: "Nococaralyn",
+          dosage: "50mg",
+          market: "JP",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09017"
         },
         {
-          newsFeed: "Quality Control Requirements",
-          therapeuticArea: "Cardiovascular",
-          brand: "CardioShield Advanced",
-          dosage: "50mg/100mg Capsules",
-          market: "US/Canada",
-          documentName: "Quality Control SOP v1.5",
-          submissionMilestone: "NDA Amendment - Q1 2026"
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management",
+          brand: "Nococaralyn",
+          dosage: "50mg",
+          market: "US",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09018"
+        },
+        {
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management",
+          brand: "Cardecara",
+          dosage: "200mg",
+          market: "EU",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09010"
+        },
+        {
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management",
+          brand: "Cardecara",
+          dosage: "200mg",
+          market: "JP",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09011"
+        },
+        {
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management",
+          brand: "Cardecara",
+          dosage: "200mg",
+          market: "US",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09004"
+        },
+        {
+          newsFeed: "Opioid Pain Medicine PIL impact",
+          therapeuticArea: "Pain Management",
+          brand: "Neuronodex",
+          dosage: "300mg",
+          market: "JP",
+          documentName: "Patient Information Leaflets (PIL)",
+          submissionMilestone: "SID09005"
         }
       ];
 
@@ -2988,30 +3342,34 @@ TIMELINE: 97 days remaining`;
       }
 
       const analysisData = {
-        1: { // Oncology
+        1: { // Opioid Pain Medicine PIL - Nococaralyn 50mg EU
           impactedData: [
             {
-              section: "Trial Design Standards",
-              content: "Current requirement: Traditional Phase I-III sequential design"
+              section: "DOCUMENT OVERVIEW",
+              content: "<div class='doc-header'><h3>Patient Information Leaflet (PIL)</h3><h4>Nococaralyn® 50mg Film-Coated Tablets</h4><p class='regulatory-ref'>EMA Marketing Authorization: EU/1/2024/001234 | Document ID: DID30296</p></div>"
             },
             {
-              section: "Biomarker Validation",
-              content: "Current standard: Single biomarker companion diagnostics"
+              section: "THERAPEUTIC CLASSIFICATION",
+              content: "<div class='therapeutic-info'><strong>Active Substance:</strong> Nococaralyn hydrochloride 50mg<br><strong>Pharmacological Class:</strong> Opioid analgesics (ATC Code: N02AA)<br><strong>Therapeutic Indication:</strong> Management of moderate to severe pain in adults<br><strong>Mechanism of Action:</strong> Selective opioid receptor modulation affecting central nervous system pain pathways</div>"
             },
             {
-              section: "Accelerated Approval Pathway",
-              content: "Current timeline: 12-18 months review process"
+              section: "CONTRAINDICATIONS & PRECAUTIONS",
+              content: "<div class='safety-warnings'><div class='contraindications'><h5>🚫 Absolute Contraindications:</h5><ul><li>Known hypersensitivity to Nococaralyn or excipients</li><li>Severe respiratory depression or compromised respiratory function</li><li>Concurrent use with monoamine oxidase inhibitors (MAOIs)</li><li>Acute or severe bronchial asthma</li></ul></div><div class='precautions'><h5>⚠️ Special Precautions:</h5><ul><li>Hepatic or renal impairment requires dose adjustment</li><li>May impair cognitive function - avoid driving/machinery operation</li><li>Risk of respiratory depression in elderly patients</li><li>Potential for drug dependence and abuse</li></ul></div></div>"
             },
             {
-              section: "Real-World Evidence Integration",
-              content: "Current approach: Post-market surveillance only"
+              section: "DOSAGE & ADMINISTRATION",
+              content: "<div class='dosage-guide'><div class='standard-dose'><h5>📋 Standard Dosing Regimen:</h5><p><strong>Initial Dose:</strong> 50mg every 4-6 hours as needed for pain</p><p><strong>Maximum Daily Dose:</strong> 400mg (8 tablets)</p><p><strong>Administration:</strong> Oral administration with water, independent of meals</p></div><div class='admin-instructions'><h5>💊 Administration Guidelines:</h5><ul><li>Swallow tablets whole - do not crush, chew, or split</li><li>Maintain consistent dosing intervals when possible</li><li>Assess pain levels regularly and adjust as clinically indicated</li><li>Gradual dose reduction recommended for discontinuation</li></ul></div></div>"
             },
             {
-              section: "Regulatory Submission Format",
-              content: "Current method: Traditional eCTD modules"
+              section: "ADVERSE REACTIONS PROFILE",
+              content: "<div class='adverse-reactions'><div class='common-adr'><h5>🔹 Common Adverse Reactions (≥1/100):</h5><ul><li><strong>Gastrointestinal:</strong> Nausea, vomiting, constipation, dry mouth</li><li><strong>Neurological:</strong> Drowsiness, dizziness, headache</li><li><strong>General:</strong> Fatigue, sweating, pruritus</li></ul></div><div class='serious-adr'><h5>🔺 Serious Adverse Reactions:</h5><ul><li><strong>Respiratory:</strong> Respiratory depression, apnea</li><li><strong>Cardiac:</strong> Bradycardia, hypotension</li><li><strong>Allergic:</strong> Anaphylaxis, angioedema, severe skin reactions</li><li><strong>Neuropsychiatric:</strong> Seizures, hallucinations, dependency</li></ul><p class='emergency-note'><strong>⚡ Emergency Contact Required:</strong> Immediate medical attention for respiratory difficulties, severe allergic reactions, or loss of consciousness</p></div></div>"
+            },
+            {
+              section: "PHARMACEUTICAL INFORMATION",
+              content: "<div class='pharma-details'><div class='composition'><h5>💊 Product Composition:</h5><p><strong>Active Ingredient:</strong> Nococaralyn hydrochloride 50mg</p><p><strong>Excipients:</strong> Lactose monohydrate, microcrystalline cellulose, croscarmellose sodium, magnesium stearate, hypromellose, titanium dioxide</p></div><div class='storage-info'><h5>🌡️ Storage & Handling:</h5><ul><li><strong>Temperature:</strong> Store below 25°C in original packaging</li><li><strong>Environment:</strong> Protect from light and moisture</li><li><strong>Security:</strong> Keep out of reach of children and unauthorized persons</li><li><strong>Shelf Life:</strong> 36 months from date of manufacture</li></ul></div><div class='manufacturer'><h5>🏭 Manufacturing Information:</h5><p><strong>Marketing Authorization Holder:</strong> PharmaNova Therapeutics Inc.</p><p><strong>Manufacturing Site:</strong> 1234 Innovation Drive, Cambridge, MA 02139, USA</p><p><strong>Batch Release Site:</strong> European facilities certified under GMP guidelines</p><p><strong>Contact Information:</strong> info@pharmanova.com | +1 (800) 555-1234</p></div></div>"
             }
           ],
-          newsType: "Oncology Drug Development"
+          newsType: "Opioid Pain Medicine PIL Impact"
         },
         2: { // Immunology  
           impactedData: [
@@ -3062,6 +3420,106 @@ TIMELINE: 97 days remaining`;
             }
           ],
           newsType: "Cardiovascular Safety"
+        },
+        4: { // Cardecara 200mg EU
+          impactedData: [
+            {
+              section: "Patient Information Leaflet (PIL)",
+              content: "Cardecara 200mg Film-Coated Tablets"
+            },
+            {
+              section: "Cardiovascular Pain Management",
+              content: "Cardecara 200mg is specifically formulated for cardiovascular-related pain management with enhanced safety profile for cardiac patients."
+            },
+            {
+              section: "Dosage and Administration",
+              content: "Recommended dose is one 200mg tablet every 8-12 hours. Monitor cardiac function during treatment. Adjust dose based on patient response."
+            },
+            {
+              section: "Contraindications and Warnings",
+              content: "Contraindicated in severe heart failure, recent MI, or severe arrhythmias. Monitor ECG and cardiac enzymes during therapy."
+            },
+            {
+              section: "Side Effects and Monitoring",
+              content: "Common: mild bradycardia, dizziness. Serious: cardiac arrhythmias, hypotension. Requires cardiac monitoring."
+            }
+          ],
+          newsType: "Opioid Pain Medicine PIL Impact"
+        },
+        5: { // Cardecara 200mg JP
+          impactedData: [
+            {
+              section: "Patient Information Leaflet (PIL)",
+              content: "Cardecara 200mg Film-Coated Tablets - Japan Market"
+            },
+            {
+              section: "Japanese Regulatory Compliance",
+              content: "Formulated according to PMDA guidelines with specific labeling requirements for Japanese market distribution."
+            },
+            {
+              section: "Cultural Considerations",
+              content: "Packaging and instructions adapted for Japanese healthcare practices with emphasis on group consultation approach."
+            },
+            {
+              section: "Local Safety Requirements",
+              content: "Enhanced reporting requirements for adverse events specific to Japanese population genetics and medication response."
+            },
+            {
+              section: "Distribution and Storage",
+              content: "Specific storage requirements for Japanese climate conditions. Distribution through approved pharmacy networks only."
+            }
+          ],
+          newsType: "Opioid Pain Medicine PIL Impact"
+        },
+        6: { // Cardecara 200mg US
+          impactedData: [
+            {
+              section: "Patient Information Leaflet (PIL)",
+              content: "Cardecara 200mg Film-Coated Tablets - US Market"
+            },
+            {
+              section: "FDA Approved Indications",
+              content: "Approved for moderate to severe cardiovascular-related pain under FDA fast-track designation with REMS program."
+            },
+            {
+              section: "DEA Scheduling",
+              content: "Classified as Schedule II controlled substance requiring secure storage, prescription tracking, and abuse monitoring."
+            },
+            {
+              section: "Black Box Warning",
+              content: "Contains FDA-mandated black box warning regarding cardiac risks, drug interactions, and potential for abuse/dependence."
+            },
+            {
+              section: "Healthcare Provider Requirements",
+              content: "Prescribers must complete REMS training and patient counseling. Pharmacy dispensing requires special handling protocols."
+            }
+          ],
+          newsType: "Opioid Pain Medicine PIL Impact"
+        },
+        7: { // Neuronodex 300mg JP
+          impactedData: [
+            {
+              section: "Patient Information Leaflet (PIL)",
+              content: "Neuronodex 300mg Extended-Release Tablets"
+            },
+            {
+              section: "Neurological Pain Management",
+              content: "Neuronodex 300mg is designed for chronic neurological pain conditions with extended-release formulation for 24-hour coverage."
+            },
+            {
+              section: "Specialized Dosing",
+              content: "Starting dose 300mg once daily, may increase to 600mg based on pain assessment and neurological response. Take with food."
+            },
+            {
+              section: "Neurological Monitoring",
+              content: "Requires baseline and periodic neurological assessments. Monitor for cognitive changes, seizure activity, and mood alterations."
+            },
+            {
+              section: "Drug Interactions",
+              content: "Significant interactions with anticonvulsants, antidepressants, and other CNS medications. Requires careful medication reconciliation."
+            }
+          ],
+          newsType: "Opioid Pain Medicine PIL Impact"
         }
       };
 
@@ -3087,31 +3545,38 @@ TIMELINE: 97 days remaining`;
       setTimeout(() => {
         // Populate only impacted data first
         let impactedHTML = `
-          <div class="analysis-header">
-            <span>Document Analysis Complete</span>
-            <span class="analysis-status">${data.newsType}</span>
-          </div>
+          <div class="original-section">
+            <div class="professional-doc">
+              <div class="doc-header">
+                <h3>📋 Original Document Analysis</h3>
+                <p class="regulatory-ref">${data.newsType}</p>
+              </div>
         `;
         data.impactedData.forEach(item => {
           impactedHTML += `
             <div class="data-item">
-              <span class="section-title">${item.section}</span>
-              <span class="section-content">${item.content}</span>
+              <div class="section-title">${item.section}</div>
+              <div class="section-content">${item.content}</div>
             </div>
           `;
         });
+        impactedHTML += `
+            </div>
+          </div>
+        `;
         impactedDisplay.innerHTML = impactedHTML;
         impactedDisplay.className = 'impacted-data-display analysis-active';
 
         // Automatically populate AI Draft with comparison data
         const comparisonData = {
-          1: { // Oncology
+          1: { // Opioid Pain Medicine PIL - AI Enhanced Version
             comparison: [
-              "<strong>Trial Design:</strong> New adaptive and umbrella study designs vs traditional sequential phases",
-              "<strong>Biomarkers:</strong> Multi-biomarker panels required vs single companion diagnostics", 
-              "<strong>Approval Timeline:</strong> Streamlined 6-8 month review vs current 12-18 months",
-              "<strong>Real-World Evidence:</strong> Integrated throughout development vs post-market only",
-              "<strong>Submission Format:</strong> Enhanced digital submissions with interactive datasets"
+              "<div class='ai-improvement'><strong>🔬 Enhanced Clinical Context:</strong> AI has identified additional safety considerations including opioid-induced hyperalgesia (OIH) and toxic leukoencephalopathy risks that should be explicitly mentioned for comprehensive patient safety.</div>",
+              "<div class='ai-improvement'><strong>💊 Optimized Dosing Guidance:</strong> AI recommends including explicit tapering instructions and mentions that abrupt discontinuation should be avoided. Added guidance on safe disposal practices for unused medication.</div>",
+              "<div class='ai-improvement'><strong>⚠️ Advanced Safety Warnings:</strong> AI has enhanced the contraindications section to include specific mention of naloxone/nalmefene overdose reversal agents that patients should discuss with healthcare providers.</div>",
+              "<div class='ai-improvement'><strong>🧠 Drug Interaction Intelligence:</strong> AI expanded the interaction warnings to specifically mention gabapentinoids and other CNS depressants, providing more comprehensive coverage of potential harmful combinations.</div>",
+              "<div class='ai-improvement'><strong>📋 Regulatory Compliance Updates:</strong> AI has integrated the latest FDA guidance on opioid labeling requirements, including enhanced warnings about esophageal dysfunction and improved disposal instructions.</div>",
+              "<div class='ai-improvement'><strong>🎯 Patient-Centric Language:</strong> AI has optimized the language for better patient comprehension while maintaining regulatory compliance, emphasizing shortest duration of use and when other treatments are insufficient.</div>"
             ]
           },
           2: { // Manufacturing  
@@ -3137,16 +3602,20 @@ TIMELINE: 97 days remaining`;
         const comparisonAnalysis = comparisonData[rowNumber];
         if (comparisonAnalysis) {
           let comparisonHTML = `
-            <div class="analysis-header">
-              <span><i class="fas fa-robot"></i> AI Draft Analysis</span>
-              <span class="analysis-status">Generated by Claude</span>
-            </div>
-            <div class="ai-draft-content">
+            <div class="ai-draft-section">
+              <div class="ai-enhanced-doc">
+                <div class="ai-enhancement-header">
+                  <h4>🤖 AI-Enhanced Patient Information Leaflet</h4>
+                  <p class="ai-generation-note">Generated using advanced regulatory AI models with enhanced safety protocols</p>
+                </div>
           `;
           comparisonAnalysis.comparison.forEach(item => {
-            comparisonHTML += `<div class="comparison-item">${item}</div>`;
+            comparisonHTML += `<div class="ai-improvement">${item}</div>`;
           });
-          comparisonHTML += '</div>';
+          comparisonHTML += `
+              </div>
+            </div>
+          `;
           
           comparisonDisplay.innerHTML = comparisonHTML;
           comparisonDisplay.className = 'llm-comparison-display analysis-active';
